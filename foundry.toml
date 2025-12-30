@@ -6,7 +6,7 @@ libs = ["lib"]
 fs_permissions = [{ access = "write", path = "./artifacts" }]
 
 # General
-evm_version = "cancun"
+evm_version = "paris"
 # Chiliz
 # evm_version = "shanghai"
 # Peaq
@@ -14,7 +14,7 @@ evm_version = "cancun"
 
 optimizer = true
 optimizer-runs = 200
-solc = "0.8.28"
+solc = "0.8.18"
 via_ir = false
 
 [profile.default.zksync]

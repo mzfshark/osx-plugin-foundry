@@ -12,7 +12,7 @@ DEPLOYMENT_SCRIPT := DeploySimple
 # DEPLOYMENT_SCRIPT := DeployDaoWithPlugins
 # DEPLOYMENT_SCRIPT := DeployViaFactory
 
-SOLC_VERSION := $(shell cat foundry.toml | grep solc | cut -d= -f2 | xargs echo || echo "0.8.28")
+SOLC_VERSION := $(shell cat foundry.toml | grep solc | cut -d= -f2 | xargs echo || echo "0.8.18")
 SUPPORTED_VERIFIERS := etherscan blockscout sourcify zksync routescan-mainnet routescan-testnet
 MAKE_TEST_TREE_CMD := deno run ./script/make-test-tree.ts
 VERIFY_CONTRACTS_SCRIPT := script/verify-contracts.sh

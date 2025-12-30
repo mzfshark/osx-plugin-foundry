@@ -15,6 +15,7 @@ This template is designed to help get developers up and running with OSx in a fe
 - **Code snippets and examples**
 
 ## Prerequisites 📋
+
 - [Foundry](https://getfoundry.sh/)
 - [Git](https://git-scm.com/)
 - [Make](https://www.gnu.org/software/make/)
@@ -22,7 +23,7 @@ This template is designed to help get developers up and running with OSx in a fe
 Optional:
 
 - [Docker](https://www.docker.com) (recommended for deploying)
-- [Deno](https://deno.land)  (used to scaffold the test files)
+- [Deno](https://deno.land) (used to scaffold the test files)
 
 ## Getting Started 🏁
 
@@ -129,7 +130,7 @@ For upgradeable plugins, consider inheriting from `PluginUpgradeableSetup` inste
 
 - [Deploying a plugin repository](./script/DeploySimple.s.sol) (simple, trusted)
 - [Deploying a DAO with plugin(s) installed](./script/DeployDaoWithPlugins.s.sol) (trusted)
-- [Deploying a DAO with plugin(s) via a Factory](./script/DeployViaFactory.s.sol)  (trustless)
+- [Deploying a DAO with plugin(s) via a Factory](./script/DeployViaFactory.s.sol) (trustless)
 
 Update `DEPLOYMENT_SCRIPT` in `Makefile` to make it use the deployment script of your choice.
 
@@ -320,7 +321,7 @@ When running a production deployment ceremony, you can use these steps as a refe
 - [ ] A file called `artifacts/deployment-<network>-<timestamp>.json` has been created, and the addresses match those logged to the screen
 - [ ] I have uploaded the following files to a shared location:
   - `logs/deployment-<network>.log` (the last one)
-  - `artifacts/deployment-<network>-<timestamp>.json`  (the last one)
+  - `artifacts/deployment-<network>-<timestamp>.json` (the last one)
   - `broadcast/Deploy.s.sol/<chain-id>/run-<timestamp>.json` (the last one, or `run-latest.json`)
 - [ ] The rest of members confirm that the values are correct
 - [ ] I have transferred the remaining funds of the deployment wallet to the address that originally funded it
@@ -345,6 +346,7 @@ Verification:
 ```
 
 These targets use the last deployment data under `broadcast/Deploy.s.sol/<chain-id>/run-latest.json`.
+
 - Ensure that the required variables are set within the `.env` file.
 
 This flow will attempt to verify all the contracts in one go, but yo umay still need to issue additional manual verifications, depending on the circumstances.
@@ -352,10 +354,11 @@ This flow will attempt to verify all the contracts in one go, but yo umay still 
 ### Routescan verification (manual)
 
 ```sh
-$ forge verify-contract <address> <path/to/file.sol>:<contract-name> --verifier-url 'https://api.routescan.io/v2/network/<testnet|mainnet>/evm/<chain-id>/etherscan' --etherscan-api-key "verifyContract" --num-of-optimizations 200 --compiler-version 0.8.28 --constructor-args <args>
+$ forge verify-contract <address> <path/to/file.sol>:<contract-name> --verifier-url 'https://api.routescan.io/v2/network/<testnet|mainnet>/evm/<chain-id>/etherscan' --etherscan-api-key "verifyContract" --num-of-optimizations 200 --compiler-version 0.8.18 --constructor-args <args>
 ```
 
 Where:
+
 - `<address>` is the address of the contract to verify
 - `<path/to/file.sol>:<contract-name>` is the path of the source file along with the contract name
 - `<testnet|mainnet>` the type of network

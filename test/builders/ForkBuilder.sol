@@ -17,7 +17,7 @@ contract ForkBuilder is ForkTestBase {
     address immutable UPGRADEABLE_PLUGIN_BASE = address(new MyUpgradeablePlugin());
 
     // Add your own parameters here
-    address manager = bob;
+    address manager;
     uint256 initialNumber = 1;
 
     function withManager(address _manager) public returns (ForkBuilder) {
@@ -36,6 +36,10 @@ contract ForkBuilder is ForkTestBase {
         public
         returns (DAO dao, PluginRepo pluginRepo, MyPluginSetup pluginSetup, MyUpgradeablePlugin plugin)
     {
+        if (manager == address(0)) {
+            manager = bob;
+        }
+
         // Prepare a plugin repo with an initial version and subdomain
         string memory pluginRepoSubdomain = string.concat("my-upgradeable-plugin-", vm.toString(block.timestamp));
         pluginSetup = new MyPluginSetup();
