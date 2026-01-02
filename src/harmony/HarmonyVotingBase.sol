@@ -47,7 +47,7 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
     event VotingPowerSubmitted(uint256 indexed proposalId, address indexed voter, uint256 votingPower);
     event ProposalClosed(uint256 indexed proposalId);
 
-    function initialize(IDAO _dao) external initializer {
+    function __HarmonyVotingBase_init(IDAO _dao) internal onlyInitializing {
         __PluginUUPSUpgradeable_init(_dao);
     }
 

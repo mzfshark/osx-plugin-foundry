@@ -6,6 +6,7 @@ import {TestBase} from "./lib/TestBase.sol";
 import {DAO} from "@aragon/osx/core/dao/DAO.sol";
 import {DaoUnauthorized} from "@aragon/osx-commons-contracts/src/permission/auth/auth.sol";
 import {HarmonyHIPVotingPlugin} from "../src/harmony/HarmonyHIPVotingPlugin.sol";
+import {HarmonyVotingBase} from "../src/harmony/HarmonyVotingBase.sol";
 import {HarmonyVotingBuilder} from "./builders/HarmonyVotingBuilder.sol";
 
 contract HarmonyVotingTest is TestBase {
@@ -50,10 +51,10 @@ contract HarmonyVotingTest is TestBase {
         uint256 proposalId = plugin.createProposal(bytes32("hip"), startDate, endDate, snapshotBlock);
 
         vm.prank(carol);
-        plugin.castVote(proposalId, HarmonyHIPVotingPlugin.VoteOption.Yes);
+        plugin.castVote(proposalId, HarmonyVotingBase.VoteOption.Yes);
 
         vm.prank(david);
-        plugin.castVote(proposalId, HarmonyHIPVotingPlugin.VoteOption.No);
+        plugin.castVote(proposalId, HarmonyVotingBase.VoteOption.No);
 
         // Cannot set root before snapshot block.
         vm.prank(oracle);
@@ -82,9 +83,9 @@ contract HarmonyVotingTest is TestBase {
         // Vote becomes immutable once power is submitted.
         vm.prank(carol);
         vm.expectRevert("VOTING_POWER_ALREADY_SUBMITTED");
-        plugin.castVote(proposalId, HarmonyHIPVotingPlugin.VoteOption.No);
+        plugin.castVote(proposalId, HarmonyVotingBase.VoteOption.No);
 
-        HarmonyHIPVotingPlugin.ProposalData memory p = plugin.getProposal(proposalId);
+        HarmonyVotingBase.ProposalData memory p = plugin.getProposal(proposalId);
         assertEq(p.yes, carolPower);
         assertEq(p.no, 0);
         assertEq(p.abstain, 0);
@@ -95,6 +96,6 @@ contract HarmonyVotingTest is TestBase {
 
         vm.prank(david);
         vm.expectRevert("PROPOSAL_CLOSED");
-        plugin.castVote(proposalId, HarmonyHIPVotingPlugin.VoteOption.Yes);
+        plugin.castVote(proposalId, HarmonyVotingBase.VoteOption.Yes);
     }
 }
