@@ -20,7 +20,7 @@ contract HarmonyHIPVotingSetup is PluginSetup {
 
         plugin = ProxyLib.deployUUPSProxy(
             implementation(),
-            abi.encodeCall(HarmonyHIPVotingPlugin.initialize, (_dao))
+            abi.encodeCall(HarmonyHIPVotingPlugin.initialize, (IDAO(_dao)))
         );
 
         PermissionLib.MultiTargetPermission[] memory permissions = new PermissionLib.MultiTargetPermission[](2);

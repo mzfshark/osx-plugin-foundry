@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {PluginUUPSUpgradeable} from "@aragon/osx/framework/plugin/setup/PluginSetupProcessor.sol";
+import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
 
 abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
     enum VoteOption {
@@ -46,7 +47,7 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
     event VotingPowerSubmitted(uint256 indexed proposalId, address indexed voter, uint256 votingPower);
     event ProposalClosed(uint256 indexed proposalId);
 
-    function initialize(address _dao) external initializer {
+    function initialize(IDAO _dao) external initializer {
         __PluginUUPSUpgradeable_init(_dao);
     }
 
