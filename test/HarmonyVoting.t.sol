@@ -76,7 +76,7 @@ contract HarmonyVotingTest is TestBase {
         bytes32[] memory proofCarol = new bytes32[](1);
         proofCarol[0] = davidLeaf;
 
-        vm.prank(eve);
+        vm.prank(alice);
         plugin.submitVotingPower(proposalId, carol, carolPower, proofCarol);
 
         // Vote becomes immutable once power is submitted.
