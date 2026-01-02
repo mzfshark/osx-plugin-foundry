@@ -2,8 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import {DAO} from "@aragon/osx/core/dao/DAO.sol";
-import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
+import {DAO, IDAO} from "@aragon/osx/core/dao/DAO.sol";
 import {IPluginSetup, PluginSetup, PermissionLib} from "@aragon/osx/framework/plugin/setup/PluginSetupProcessor.sol";
 import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/ProxyLib.sol";
 

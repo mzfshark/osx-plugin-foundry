@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {PluginUUPSUpgradeable} from "@aragon/osx/framework/plugin/setup/PluginSetupProcessor.sol";
-import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
+import {IDAO} from "@aragon/osx/core/dao/DAO.sol";
 
 abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
     enum VoteOption {
