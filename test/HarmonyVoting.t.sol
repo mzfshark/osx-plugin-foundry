@@ -28,8 +28,17 @@ contract HarmonyVotingTest is TestBase {
     }
 
     function test_RevertWhen_CreateProposalWithoutPermission() external {
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                DaoUnauthorized.selector,
+                dao,
+                plugin,
+                carol,
+                plugin.PROPOSER_PERMISSION_ID()
+            )
+        );
+
         vm.prank(carol);
-        vm.expectRevert(DaoUnauthorized.selector);
 
         plugin.createProposal(bytes32("m"), uint64(block.timestamp), uint64(block.timestamp + 100), uint64(10));
     }
