@@ -29,6 +29,11 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
     bytes32 public constant PROPOSER_PERMISSION_ID = keccak256("PROPOSER_PERMISSION");
     bytes32 public constant ORACLE_PERMISSION_ID = keccak256("ORACLE_PERMISSION");
 
+    /// @notice Window after `endDate` where the oracle/automation can finalize the proposal by
+    /// setting the Merkle root and submitting voting power.
+    /// @dev Chosen to keep the protocol non-interactive for validators after voting.
+    uint64 public constant FINALIZATION_PERIOD = 2 days;
+
     uint256 public proposalCount;
 
     mapping(uint256 => ProposalData) internal proposals;
@@ -77,7 +82,8 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         if (p.merkleRoot != bytes32(0)) revert("ROOT_ALREADY_SET");
 
         if (block.number < p.snapshotBlock) revert("SNAPSHOT_NOT_REACHED");
-        if (block.timestamp >= p.endDate) revert("VOTING_ENDED");
+        if (block.timestamp < p.endDate) revert("FINALIZATION_NOT_STARTED");
+        if (block.timestamp >= p.endDate + FINALIZATION_PERIOD) revert("FINALIZATION_ENDED");
         if (_merkleRoot == bytes32(0)) revert("INVALID_ROOT");
 
         p.merkleRoot = _merkleRoot;
@@ -107,7 +113,8 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         ProposalData storage p = proposals[_proposalId];
         if (p.endDate == 0) revert("PROPOSAL_NOT_FOUND");
         if (p.closed) revert("PROPOSAL_CLOSED");
-        if (block.timestamp >= p.endDate) revert("VOTING_ENDED");
+        if (block.timestamp < p.endDate) revert("FINALIZATION_NOT_STARTED");
+        if (block.timestamp >= p.endDate + FINALIZATION_PERIOD) revert("FINALIZATION_ENDED");
         if (block.number < p.snapshotBlock) revert("SNAPSHOT_NOT_REACHED");
         if (p.merkleRoot == bytes32(0)) revert("ROOT_NOT_SET");
         if (votingPowerSubmitted[_proposalId][_voter]) revert("VOTING_POWER_ALREADY_SUBMITTED");
@@ -116,7 +123,7 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         if (option == VoteOption.None) revert("NO_VOTE_CAST");
         if (_votingPower == 0) revert("INVALID_VOTING_POWER");
 
-        bytes32 leaf = keccak256(abi.encode(_voter, _votingPower));
+        bytes32 leaf = keccak256(abi.encodePacked(_voter, _votingPower));
         if (!MerkleProof.verify(_proof, p.merkleRoot, leaf)) revert("INVALID_PROOF");
 
         votingPowerSubmitted[_proposalId][_voter] = true;
@@ -136,7 +143,7 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         ProposalData storage p = proposals[_proposalId];
         if (p.endDate == 0) revert("PROPOSAL_NOT_FOUND");
         if (p.closed) revert("PROPOSAL_CLOSED");
-        if (block.timestamp < p.endDate) revert("VOTING_NOT_ENDED");
+        if (block.timestamp < p.endDate + FINALIZATION_PERIOD) revert("FINALIZATION_NOT_ENDED");
         p.closed = true;
         emit ProposalClosed(_proposalId);
     }

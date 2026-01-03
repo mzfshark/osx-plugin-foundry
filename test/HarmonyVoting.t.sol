@@ -68,9 +68,16 @@ contract HarmonyVotingTest is TestBase {
         uint256 carolPower = 100;
         uint256 davidPower = 50;
 
-        bytes32 carolLeaf = keccak256(abi.encode(carol, carolPower));
-        bytes32 davidLeaf = keccak256(abi.encode(david, davidPower));
+        bytes32 carolLeaf = keccak256(abi.encodePacked(carol, carolPower));
+        bytes32 davidLeaf = keccak256(abi.encodePacked(david, davidPower));
         bytes32 root = _hashPair(carolLeaf, davidLeaf);
+
+        vm.prank(oracle);
+        vm.expectRevert("FINALIZATION_NOT_STARTED");
+        plugin.setMerkleRoot(proposalId, root);
+
+        // Move to finalization window.
+        vm.warp(uint256(endDate));
 
         vm.prank(oracle);
         plugin.setMerkleRoot(proposalId, root);
@@ -91,8 +98,12 @@ contract HarmonyVotingTest is TestBase {
         assertEq(p.no, 0);
         assertEq(p.abstain, 0);
 
-        // Closing after endDate.
-        vm.warp(uint256(endDate));
+        // Cannot close until finalization window ends.
+        vm.expectRevert("FINALIZATION_NOT_ENDED");
+        plugin.closeProposal(proposalId);
+
+        // Closing after finalization window.
+        vm.warp(uint256(endDate) + uint256(plugin.FINALIZATION_PERIOD()));
         plugin.closeProposal(proposalId);
 
         vm.prank(david);
