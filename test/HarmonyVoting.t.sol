@@ -88,9 +88,9 @@ contract HarmonyVotingTest is TestBase {
         vm.prank(alice);
         plugin.submitVotingPower(proposalId, carol, carolPower, proofCarol);
 
-        // Vote becomes immutable once power is submitted.
+        // Voting is already ended at this point.
         vm.prank(carol);
-        vm.expectRevert("VOTING_POWER_ALREADY_SUBMITTED");
+        vm.expectRevert("VOTING_ENDED");
         plugin.castVote(proposalId, HarmonyVotingBase.VoteOption.No);
 
         HarmonyVotingBase.ProposalData memory p = plugin.getProposal(proposalId);
