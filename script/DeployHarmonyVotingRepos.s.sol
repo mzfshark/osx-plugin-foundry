@@ -185,8 +185,17 @@ contract DeployHarmonyVotingReposScript is Script {
         artifacts.serialize("optInRegistry", address(optInRegistry));
 
         string memory networkName = vm.envString("NETWORK_NAME");
+
+        string memory artifactsDir = string.concat(vm.projectRoot(), "/artifacts");
+        vm.createDir(artifactsDir, true);
+
         string memory filePath = string.concat(
-            vm.projectRoot(), "/artifacts/deployment-harmony-voting-", networkName, "-", vm.toString(block.timestamp), ".json"
+            artifactsDir,
+            "/deployment-harmony-voting-",
+            networkName,
+            "-",
+            vm.toString(block.timestamp),
+            ".json"
         );
         artifacts.write(filePath);
 
