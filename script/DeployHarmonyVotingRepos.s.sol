@@ -6,6 +6,8 @@ import {stdJson} from "forge-std/StdJson.sol";
 
 import {PluginRepoFactory} from "@aragon/osx/framework/plugin/repo/PluginRepoFactory.sol";
 import {PluginRepo} from "@aragon/osx/framework/plugin/repo/PluginRepo.sol";
+import {PermissionLib} from "@aragon/osx-commons-contracts/src/permission/PermissionLib.sol";
+import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/ProxyLib.sol";
 
 import {HarmonyHIPVotingSetup} from "../src/setup/HarmonyHIPVotingSetup.sol";
 import {HarmonyDelegationVotingSetup} from "../src/setup/HarmonyDelegationVotingSetup.sol";
@@ -25,6 +27,7 @@ import {HarmonyValidatorOptInRegistry} from "../src/harmony/HarmonyValidatorOptI
  */
 contract DeployHarmonyVotingReposScript is Script {
     using stdJson for string;
+    using ProxyLib for address;
 
     address deployer;
     PluginRepoFactory pluginRepoFactory;
@@ -40,6 +43,43 @@ contract DeployHarmonyVotingReposScript is Script {
     PluginRepo hipRepo;
     PluginRepo delegationRepo;
     HarmonyValidatorOptInRegistry optInRegistry;
+
+    function _deployRepoWithoutRegistry(
+        PluginRepoFactory factory,
+        address pluginSetup,
+        address maintainer,
+        bytes memory releaseMetadata,
+        bytes memory buildMetadata
+    ) internal returns (PluginRepo pluginRepo) {
+        // On some networks, the PluginRepoRegistry can be deployed without ENS support,
+        // which makes registerPluginRepo revert with ENSNotSupported().
+        // We still can deploy a PluginRepo proxy directly and publish versions.
+
+        address pluginRepoBase = factory.pluginRepoBase();
+        pluginRepo = PluginRepo(pluginRepoBase.deployUUPSProxy(abi.encodeCall(PluginRepo.initialize, (deployer))));
+
+        // Publish first version 1.1
+        pluginRepo.createVersion(1, pluginSetup, buildMetadata, releaseMetadata);
+
+        // If maintainer differs from deployer, replicate factory's final permissions.
+        if (maintainer != deployer) {
+            PermissionLib.SingleTargetPermission[] memory items = new PermissionLib.SingleTargetPermission[](6);
+
+            bytes32 rootPermissionID = pluginRepo.ROOT_PERMISSION_ID();
+            bytes32 maintainerPermissionID = pluginRepo.MAINTAINER_PERMISSION_ID();
+            bytes32 upgradePermissionID = pluginRepo.UPGRADE_REPO_PERMISSION_ID();
+
+            items[0] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Grant, maintainer, maintainerPermissionID);
+            items[1] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Grant, maintainer, upgradePermissionID);
+            items[2] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Grant, maintainer, rootPermissionID);
+
+            items[3] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Revoke, deployer, rootPermissionID);
+            items[4] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Revoke, deployer, maintainerPermissionID);
+            items[5] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Revoke, deployer, upgradePermissionID);
+
+            pluginRepo.applySingleTargetPermissions(address(pluginRepo), items);
+        }
+    }
 
     modifier broadcast() {
         uint256 privKey = vm.envUint("DEPLOYMENT_PRIVATE_KEY");
@@ -96,12 +136,15 @@ contract DeployHarmonyVotingReposScript is Script {
         hipSetup = new HarmonyHIPVotingSetup(oracleAddress);
         delegationSetup = new HarmonyDelegationVotingSetup(oracleAddress);
 
-        hipRepo = pluginRepoFactory.createPluginRepoWithFirstVersion(
-            hipEnsSubdomain, address(hipSetup), pluginRepoMaintainerAddress, " ", " "
-        );
-
-        delegationRepo = pluginRepoFactory.createPluginRepoWithFirstVersion(
-            delegationEnsSubdomain, address(delegationSetup), pluginRepoMaintainerAddress, " ", " "
+        // NOTE: Do NOT register on PluginRepoRegistry here (can revert with ENSNotSupported on Harmony).
+        // The app/backend can still use the repo addresses directly.
+        hipRepo = _deployRepoWithoutRegistry(pluginRepoFactory, address(hipSetup), pluginRepoMaintainerAddress, " ", " ");
+        delegationRepo = _deployRepoWithoutRegistry(
+            pluginRepoFactory,
+            address(delegationSetup),
+            pluginRepoMaintainerAddress,
+            " ",
+            " "
         );
 
         optInRegistry = new HarmonyValidatorOptInRegistry();
@@ -111,13 +154,13 @@ contract DeployHarmonyVotingReposScript is Script {
         console2.log("Harmony HIP Voting:");
         console2.log("- Setup:                    ", address(hipSetup));
         console2.log("- Repo:                     ", address(hipRepo));
-        console2.log("- ENS:                      ", string.concat(hipEnsSubdomain, ".plugin.dao.eth"));
+        console2.log("- ENS (not registered):     ", string.concat(hipEnsSubdomain, ".plugin.dao.eth"));
         console2.log("");
 
         console2.log("Harmony Delegation Voting:");
         console2.log("- Setup:                    ", address(delegationSetup));
         console2.log("- Repo:                     ", address(delegationRepo));
-        console2.log("- ENS:                      ", string.concat(delegationEnsSubdomain, ".plugin.dao.eth"));
+        console2.log("- ENS (not registered):     ", string.concat(delegationEnsSubdomain, ".plugin.dao.eth"));
         console2.log("");
 
         console2.log("Harmony Opt-In Registry:");
