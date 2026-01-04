@@ -60,8 +60,8 @@ contract DeployHarmonyVotingReposScript is Script {
         pluginRepoFactory = PluginRepoFactory(vm.envAddress("PLUGIN_REPO_FACTORY_ADDRESS"));
         vm.label(address(pluginRepoFactory), "PluginRepoFactory");
 
-        pluginRepoMaintainerAddress = vm.envAddress("PLUGIN_REPO_MAINTAINER_ADDRESS");
-        vm.label(pluginRepoMaintainerAddress, "Maintainer");
+        // Maintainer can be left empty in .env; default it to deployer at runtime.
+        pluginRepoMaintainerAddress = vm.envOr("PLUGIN_REPO_MAINTAINER_ADDRESS", address(0));
 
         oracleAddress = vm.envAddress("ORACLE_ADDRESS");
         vm.label(oracleAddress, "Oracle");
@@ -79,6 +79,11 @@ contract DeployHarmonyVotingReposScript is Script {
     }
 
     function run() public broadcast {
+        if (pluginRepoMaintainerAddress == address(0)) {
+            pluginRepoMaintainerAddress = deployer;
+        }
+        vm.label(pluginRepoMaintainerAddress, "Maintainer");
+
         deployAll();
         printDeployment();
 
