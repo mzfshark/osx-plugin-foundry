@@ -43,7 +43,6 @@ contract HarmonyVotingBuilder is TestBase {
         );
 
         vm.startPrank(daoOwner);
-        dao.grant(address(plugin), proposer, plugin.PROPOSER_PERMISSION_ID());
         dao.grant(address(plugin), oracle, plugin.ORACLE_PERMISSION_ID());
         vm.stopPrank();
 
