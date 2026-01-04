@@ -21,6 +21,8 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         uint64 snapshotBlock;
         bytes32 merkleRoot;
         bool closed;
+        bool passed;
+        uint256 totalEligiblePower;
         uint256 yes;
         uint256 no;
         uint256 abstain;
@@ -47,10 +49,10 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         uint64 endDate,
         uint64 snapshotBlock
     );
-    event MerkleRootSet(uint256 indexed proposalId, bytes32 indexed merkleRoot);
+    event MerkleRootSet(uint256 indexed proposalId, bytes32 indexed merkleRoot, uint256 totalEligiblePower);
     event VoteCast(uint256 indexed proposalId, address indexed voter, VoteOption option);
     event VotingPowerSubmitted(uint256 indexed proposalId, address indexed voter, uint256 votingPower);
-    event ProposalClosed(uint256 indexed proposalId);
+    event ProposalClosed(uint256 indexed proposalId, bool passed);
 
     function __HarmonyVotingBase_init(IDAO _dao) internal onlyInitializing {
         __PluginUUPSUpgradeable_init(_dao);
@@ -61,7 +63,9 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         uint64 _startDate,
         uint64 _endDate,
         uint64 _snapshotBlock
-    ) external auth(PROPOSER_PERMISSION_ID) returns (uint256 proposalId) {
+    ) external returns (uint256 proposalId) {
+        // Harmony ONE has 18 decimals, so 1 ONE == 1e18 (same as `1 ether`).
+        if (msg.sender.balance < 1 ether) revert("INSUFFICIENT_PROPOSER_BALANCE");
         if (_startDate >= _endDate) revert("INVALID_DATES");
         if (_snapshotBlock == 0) revert("INVALID_SNAPSHOT_BLOCK");
 
@@ -75,7 +79,11 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         emit ProposalCreated(proposalId, _metadata, _startDate, _endDate, _snapshotBlock);
     }
 
-    function setMerkleRoot(uint256 _proposalId, bytes32 _merkleRoot) external auth(ORACLE_PERMISSION_ID) {
+    function setMerkleRoot(
+        uint256 _proposalId,
+        bytes32 _merkleRoot,
+        uint256 _totalEligiblePower
+    ) external auth(ORACLE_PERMISSION_ID) {
         ProposalData storage p = proposals[_proposalId];
         if (p.endDate == 0) revert("PROPOSAL_NOT_FOUND");
         if (p.closed) revert("PROPOSAL_CLOSED");
@@ -85,9 +93,11 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         if (block.timestamp < p.endDate) revert("FINALIZATION_NOT_STARTED");
         if (block.timestamp >= p.endDate + FINALIZATION_PERIOD) revert("FINALIZATION_ENDED");
         if (_merkleRoot == bytes32(0)) revert("INVALID_ROOT");
+        if (_totalEligiblePower == 0) revert("INVALID_TOTAL_ELIGIBLE_POWER");
 
         p.merkleRoot = _merkleRoot;
-        emit MerkleRootSet(_proposalId, _merkleRoot);
+        p.totalEligiblePower = _totalEligiblePower;
+        emit MerkleRootSet(_proposalId, _merkleRoot, _totalEligiblePower);
     }
 
     function castVote(uint256 _proposalId, VoteOption _option) external {
@@ -144,8 +154,40 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
         if (p.endDate == 0) revert("PROPOSAL_NOT_FOUND");
         if (p.closed) revert("PROPOSAL_CLOSED");
         if (block.timestamp < p.endDate + FINALIZATION_PERIOD) revert("FINALIZATION_NOT_ENDED");
+
+        _closeProposal(p, _proposalId);
+    }
+
+    /// @notice Allows the oracle to close the proposal as soon as voting ended, without waiting
+    /// for `FINALIZATION_PERIOD` to elapse.
+    /// @dev This assumes the oracle/automation has already set the Merkle root and submitted
+    /// voting power proofs for the voters to produce a final tally.
+    function oracleCloseProposal(uint256 _proposalId) external auth(ORACLE_PERMISSION_ID) {
+        ProposalData storage p = proposals[_proposalId];
+        if (p.endDate == 0) revert("PROPOSAL_NOT_FOUND");
+        if (p.closed) revert("PROPOSAL_CLOSED");
+        if (block.timestamp < p.endDate) revert("VOTING_NOT_ENDED");
+        if (block.timestamp >= p.endDate + FINALIZATION_PERIOD) revert("FINALIZATION_ENDED");
+        if (block.number < p.snapshotBlock) revert("SNAPSHOT_NOT_REACHED");
+
+        _closeProposal(p, _proposalId);
+    }
+
+    function _closeProposal(ProposalData storage p, uint256 _proposalId) internal {
+        if (p.merkleRoot == bytes32(0)) revert("ROOT_NOT_SET");
+        if (p.totalEligiblePower == 0) revert("TOTAL_ELIGIBLE_POWER_NOT_SET");
+
+        // Quorum: 51% of total eligible power.
+        uint256 totalCast = p.yes + p.no + p.abstain;
+        bool quorumReached = totalCast * 100 >= p.totalEligiblePower * 51;
+
+        // Approval (A): yes / (yes + no) >= 2/3.
+        uint256 yesNo = p.yes + p.no;
+        bool approvalReached = yesNo != 0 && p.yes * 3 >= yesNo * 2;
+
+        p.passed = quorumReached && approvalReached;
         p.closed = true;
-        emit ProposalClosed(_proposalId);
+        emit ProposalClosed(_proposalId, p.passed);
     }
 
     function getProposal(uint256 _proposalId) external view returns (ProposalData memory) {

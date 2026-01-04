@@ -9,33 +9,30 @@ import {IDAO} from "@aragon/osx/core/dao/DAO.sol";
 import {HarmonyDelegationVotingPlugin} from "../harmony/HarmonyDelegationVotingPlugin.sol";
 
 contract HarmonyDelegationVotingSetup is PluginSetup {
-    constructor() PluginSetup(address(new HarmonyDelegationVotingPlugin())) {}
+    address public immutable ORACLE;
+
+    constructor(address _oracle) PluginSetup(address(new HarmonyDelegationVotingPlugin())) {
+        require(_oracle != address(0), "INVALID_ORACLE");
+        ORACLE = _oracle;
+    }
 
     function prepareInstallation(
         address _dao,
         bytes memory _installationParams
     ) external returns (address plugin, PreparedSetupData memory preparedSetupData) {
-        (address proposer, address oracle) = abi.decode(_installationParams, (address, address));
+        require(_installationParams.length == 0, "INSTALL_PARAMS_NOT_SUPPORTED");
 
         plugin = ProxyLib.deployUUPSProxy(
             implementation(),
             abi.encodeCall(HarmonyDelegationVotingPlugin.initialize, (IDAO(_dao)))
         );
 
-        PermissionLib.MultiTargetPermission[] memory permissions = new PermissionLib.MultiTargetPermission[](2);
+        PermissionLib.MultiTargetPermission[] memory permissions = new PermissionLib.MultiTargetPermission[](1);
 
         permissions[0] = PermissionLib.MultiTargetPermission({
             operation: PermissionLib.Operation.Grant,
             where: plugin,
-            who: proposer,
-            condition: PermissionLib.NO_CONDITION,
-            permissionId: HarmonyDelegationVotingPlugin(implementation()).PROPOSER_PERMISSION_ID()
-        });
-
-        permissions[1] = PermissionLib.MultiTargetPermission({
-            operation: PermissionLib.Operation.Grant,
-            where: plugin,
-            who: oracle,
+            who: ORACLE,
             condition: PermissionLib.NO_CONDITION,
             permissionId: HarmonyDelegationVotingPlugin(implementation()).ORACLE_PERMISSION_ID()
         });
@@ -47,22 +44,12 @@ contract HarmonyDelegationVotingSetup is PluginSetup {
         address /* _dao */,
         SetupPayload calldata _payload
     ) external view returns (PermissionLib.MultiTargetPermission[] memory permissions) {
-        (address proposer, address oracle) = abi.decode(_payload.data, (address, address));
-
-        permissions = new PermissionLib.MultiTargetPermission[](2);
+        permissions = new PermissionLib.MultiTargetPermission[](1);
 
         permissions[0] = PermissionLib.MultiTargetPermission({
             operation: PermissionLib.Operation.Revoke,
             where: _payload.plugin,
-            who: proposer,
-            condition: PermissionLib.NO_CONDITION,
-            permissionId: HarmonyDelegationVotingPlugin(implementation()).PROPOSER_PERMISSION_ID()
-        });
-
-        permissions[1] = PermissionLib.MultiTargetPermission({
-            operation: PermissionLib.Operation.Revoke,
-            where: _payload.plugin,
-            who: oracle,
+            who: ORACLE,
             condition: PermissionLib.NO_CONDITION,
             permissionId: HarmonyDelegationVotingPlugin(implementation()).ORACLE_PERMISSION_ID()
         });
