@@ -1,6 +1,7 @@
 # Deploy Guide - Harmony Voting Plugins
 
 Este guia cobre o deploy dos plugins Harmony (HIP e Delegator) com as novas features:
+
 - HarmonyDelegationVotingPlugin com `validatorAddress` storage configurável
 - HIPPluginAllowlist para controle de acesso ao HIP plugin
 - NativeTokenVotingPlugin (em AragonOSX)
@@ -10,6 +11,7 @@ Este guia cobre o deploy dos plugins Harmony (HIP e Delegator) com as novas feat
 ### osx-plugin-foundry (Harmony Plugins)
 
 1. Configurar `.env` na raiz do repo:
+
 ```bash
 DEPLOYMENT_PRIVATE_KEY=<sua_private_key>
 PLUGIN_REPO_FACTORY_ADDRESS=0x753e32a799F319d25aCf138b343003ce0A5171eB
@@ -21,11 +23,13 @@ HARMONY_MAINNET_RPC=https://api.harmony.one
 ```
 
 2. Instalar dependências:
+
 ```bash
 forge install
 ```
 
 3. Compilar:
+
 ```bash
 forge build
 ```
@@ -33,12 +37,14 @@ forge build
 ### AragonOSX (NativeTokenVoting)
 
 1. Configurar `.env` em `AragonOSX/packages/contracts`:
+
 ```bash
 ETH_KEY=<sua_private_key>
 HARMONY_MAINNET_RPC=https://api.harmony.one
 ```
 
 2. Instalar dependências:
+
 ```bash
 cd AragonOSX/packages/contracts
 yarn install
@@ -59,6 +65,7 @@ forge script script/DeployHarmonyVotingRepos.s.sol \
 ```
 
 **Contratos deployados:**
+
 - `HIPPluginAllowlist` (implementation + UUPS proxy)
 - `HarmonyHIPVotingSetup`
 - `HarmonyHIPVotingPluginRepo`
@@ -95,6 +102,7 @@ cast send <ALLOWLIST_PROXY_ADDRESS> \
 ```
 
 Ou criar uma proposal no ManagementDAO com a action:
+
 ```
 target: <ALLOWLIST_PROXY_ADDRESS>
 function: allowDAO(address)
@@ -160,6 +168,7 @@ O script já registra no PluginRepoFactory automaticamente. Após deploy, atuali
 ### osx-plugin-foundry
 
 1. **HIPPluginAllowlist:**
+
 ```bash
 cast call <ALLOWLIST_PROXY_ADDRESS> \
   "isDAOAllowed(address)(bool)" \
@@ -168,6 +177,7 @@ cast call <ALLOWLIST_PROXY_ADDRESS> \
 ```
 
 2. **HarmonyDelegationVoting:**
+
 ```bash
 cast call <PLUGIN_ADDRESS> \
   "validatorAddress()(address)" \
@@ -175,6 +185,7 @@ cast call <PLUGIN_ADDRESS> \
 ```
 
 3. **Permissões:**
+
 ```bash
 # Verificar UPDATE_VALIDATOR_PERMISSION no Delegator
 cast call <PLUGIN_ADDRESS> \
@@ -185,6 +196,7 @@ cast call <PLUGIN_ADDRESS> \
 ### AragonOSX
 
 1. **NativeTokenVoting:**
+
 ```bash
 cast call <PLUGIN_ADDRESS> \
   "minProposerVotingPower()(uint256)" \
@@ -211,18 +223,22 @@ AragonOSX/packages/contracts/
 ## Troubleshooting
 
 ### Erro: "DAO_NOT_AUTHORIZED" no HIP setup
+
 - Verificar se o DAO foi adicionado ao allowlist via `allowDAO()`
 - Confirmar que o ManagementDAO é o owner do allowlist
 
 ### Erro: "INVALID_VALIDATOR_ADDRESS" no Delegator setup
+
 - Verificar que o `validatorAddress` não é `address(0)`
 - Confirmar formato dos installation params (abi.encode)
 
 ### Erro: "transaction underpriced" (Harmony)
+
 - Aumentar `HARMONY_GAS_PRICE` no `.env`
 - Exemplo: `HARMONY_GAS_PRICE=30000000000` (30 gwei)
 
 ### Backend não lê validatorAddress
+
 - Verificar que o plugin foi deployado com a nova versão (com storage)
 - Confirmar que o RPC endpoint está acessível
 - Checar logs do finalizer: `docker logs -f service-aragon-indexer`
