@@ -15,14 +15,16 @@ Este guia cobre o deploy dos plugins Harmony (HIP e Delegator) com as novas feat
 ```bash
 DEPLOYMENT_PRIVATE_KEY=<sua_private_key>
 PLUGIN_REPO_FACTORY_ADDRESS=0x753e32a799F319d25aCf138b343003ce0A5171eB
-PLUGIN_REPO_MAINTAINER_ADDRESS=<endereço_do_maintainer>
+PLUGIN_REPO_MAINTAINER_ADDRESS=0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2  # Management DAO (recomendado para mainnet)
 ORACLE_ADDRESS=0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1  # Mainnet Band Oracle
 MANAGEMENT_DAO_ADDRESS=0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2  # Management DAO Proxy
 NETWORK_NAME=harmony
 HARMONY_MAINNET_RPC=https://api.harmony.one
 ```
 
-> **Nota:** `MANAGEMENT_DAO_ADDRESS` usa o mesmo endereço de `MANAGEMENT_DAO_PROXY_ADDRESS` do backend. Se não definido, o script deve usar `MANAGEMENT_DAO_PROXY_ADDRESS` como fallback.
+> **Nota sobre PLUGIN_REPO_MAINTAINER_ADDRESS:** Este endereço receberá permissões de manutenção (MAINTAINER_PERMISSION_ID, UPGRADE_REPO_PERMISSION_ID, ROOT_PERMISSION_ID) sobre os Plugin Repositories criados. **Recomendação:** Use o Management DAO (`0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2`) para que atualizações dos plugins sejam governadas. Para testnet, pode usar uma EOA da equipe.
+
+> **Nota sobre MANAGEMENT_DAO_ADDRESS:** Usa o mesmo endereço de `MANAGEMENT_DAO_PROXY_ADDRESS` do backend. Se não definido, o script deve usar `MANAGEMENT_DAO_PROXY_ADDRESS` como fallback.
 
 2. Instalar dependências:
 

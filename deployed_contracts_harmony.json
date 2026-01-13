@@ -53,7 +53,8 @@
     "bandAdapterAddress": "0x0A87139b65399102f5F9B9B245531CF1A04ec86d",
     "managementDaoAddress": "0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2",
     "pluginRepoFactory": "0x753e32a799F319d25aCf138b343003ce0A5171eB",
-    "pluginRepoMaintainer": "TBD"
+    "pluginRepoMaintainer": "0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2",
+    "pluginRepoMaintainerNote": "Management DAO - receberá MAINTAINER_PERMISSION_ID, UPGRADE_REPO_PERMISSION_ID e ROOT_PERMISSION_ID sobre os PluginRepos"
   },
   "notes": {
     "deployment": "Use script/DeployHarmonyVotingRepos.s.sol with forge script",
