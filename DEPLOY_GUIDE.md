@@ -16,11 +16,13 @@ Este guia cobre o deploy dos plugins Harmony (HIP e Delegator) com as novas feat
 DEPLOYMENT_PRIVATE_KEY=<sua_private_key>
 PLUGIN_REPO_FACTORY_ADDRESS=0x753e32a799F319d25aCf138b343003ce0A5171eB
 PLUGIN_REPO_MAINTAINER_ADDRESS=<endereço_do_maintainer>
-ORACLE_ADDRESS=<endereço_do_oracle_backend>
-MANAGEMENT_DAO_ADDRESS=0x8f9a805603B6fd5df7e8d284CA66CcaF77C3BeF6
+ORACLE_ADDRESS=0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1  # Mainnet Band Oracle
+MANAGEMENT_DAO_ADDRESS=0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2  # Management DAO Proxy
 NETWORK_NAME=harmony
 HARMONY_MAINNET_RPC=https://api.harmony.one
 ```
+
+> **Nota:** `MANAGEMENT_DAO_ADDRESS` usa o mesmo endereço de `MANAGEMENT_DAO_PROXY_ADDRESS` do backend. Se não definido, o script deve usar `MANAGEMENT_DAO_PROXY_ADDRESS` como fallback.
 
 2. Instalar dependências:
 
@@ -63,6 +65,8 @@ forge script script/DeployHarmonyVotingRepos.s.sol \
   --verify \
   --etherscan-api-key <sua_api_key> # opcional
 ```
+
+> **Importante:** O script usa `ORACLE_ADDRESS=0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1` (Mainnet Band Oracle). Se você quiser usar outro oracle ou o Band Adapter (`0x0A87139b65399102f5F9B9B245531CF1A04ec86d`), atualize o `.env` antes do deploy.
 
 **Contratos deployados:**
 
@@ -111,9 +115,17 @@ params: [<DAO_ADDRESS>]
 
 ### 4. Configurar Oracle Backend
 
-No backend (Aragon-app-backend), atualizar `.env`:
+No backend (Aragon-app-backend), verificar `.env`:
 
 ```bash
+# Oracle settings (já configurado no .env)
+ORACLE_ADDRESS=0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1      # Mainnet Band
+BAND_ADDRESS=0x0A87139b65399102f5F9B9B245531CF1A04ec86d        # Band Adapter (opcional)
+
+# Management DAO (usado para controle do allowlist)
+MANAGEMENT_DAO_PROXY_ADDRESS=0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2
+
+# Harmony Voting Finalizer Targets
 HARMONY_VOTING_FINALIZER_TARGETS='[
   {
     "network": "harmonyMainnet",
@@ -132,6 +144,8 @@ HARMONY_VOTING_FINALIZER_TARGETS='[
   }
 ]'
 ```
+
+> **Nota sobre BAND_ADDRESS:** O Band Adapter (`0x0A87139b65399102f5F9B9B245531CF1A04ec86d`) é um wrapper que expõe funções padrão de oracle (similar ao Chainlink). Use-o se o finalizer precisar de interface compatível com AggregatorV3Interface. Caso contrário, `ORACLE_ADDRESS` já é suficiente.
 
 **Nota:** Para Delegation mode, o `validatorAddress` será lido automaticamente do contrato se não fornecido na config.
 

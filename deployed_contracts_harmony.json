@@ -49,8 +49,9 @@
     }
   },
   "deployConfig": {
-    "oracleAddress": "TBD",
-    "managementDaoAddress": "0x8f9a805603B6fd5df7e8d284CA66CcaF77C3BeF6",
+    "oracleAddress": "0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1",
+    "bandAdapterAddress": "0x0A87139b65399102f5F9B9B245531CF1A04ec86d",
+    "managementDaoAddress": "0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2",
     "pluginRepoFactory": "0x753e32a799F319d25aCf138b343003ce0A5171eB",
     "pluginRepoMaintainer": "TBD"
   },
