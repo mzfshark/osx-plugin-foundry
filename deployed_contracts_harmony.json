@@ -1,0 +1,74 @@
+{
+  "network": "harmony",
+  "chainId": 1666600000,
+  "contracts": {
+    "HarmonyHIPVotingPlugin": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - HIP voting plugin implementation"
+    },
+    "HarmonyHIPVotingSetup": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - HIP voting setup contract"
+    },
+    "HarmonyHIPVotingPluginRepo": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - HIP voting plugin repository"
+    },
+    "HarmonyDelegationVotingPlugin": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - Delegation voting plugin implementation with validatorAddress storage"
+    },
+    "HarmonyDelegationVotingSetup": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - Delegation voting setup contract (requires validatorAddress param)"
+    },
+    "HarmonyDelegationVotingPluginRepo": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - Delegation voting plugin repository"
+    },
+    "HIPPluginAllowlist": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - Allowlist contract for HIP plugin access control"
+    },
+    "HIPPluginAllowlistProxy": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - UUPS Proxy for HIP allowlist"
+    },
+    "HarmonyValidatorOptInRegistry": {
+      "address": "",
+      "txHash": "",
+      "note": "To be deployed - Validator opt-in registry for voting delegation"
+    }
+  },
+  "deployConfig": {
+    "oracleAddress": "TBD",
+    "managementDaoAddress": "0x8f9a805603B6fd5df7e8d284CA66CcaF77C3BeF6",
+    "pluginRepoFactory": "0x753e32a799F319d25aCf138b343003ce0A5171eB",
+    "pluginRepoMaintainer": "TBD"
+  },
+  "notes": {
+    "deployment": "Use script/DeployHarmonyVotingRepos.s.sol with forge script",
+    "envVars": [
+      "DEPLOYMENT_PRIVATE_KEY",
+      "PLUGIN_REPO_FACTORY_ADDRESS=0x753e32a799F319d25aCf138b343003ce0A5171eB",
+      "PLUGIN_REPO_MAINTAINER_ADDRESS",
+      "ORACLE_ADDRESS",
+      "MANAGEMENT_DAO_ADDRESS=0x8f9a805603B6fd5df7e8d284CA66CcaF77C3BeF6",
+      "NETWORK_NAME=harmony"
+    ],
+    "features": {
+      "HarmonyDelegationVoting": "Requires validatorAddress in installation params, supports UPDATE_VALIDATOR_PERMISSION",
+      "HarmonyHIPVoting": "Restricted by HIPPluginAllowlist, only authorized DAOs can install",
+      "HIPPluginAllowlist": "Controlled by Management DAO, manages which DAOs can use HIP plugin"
+    }
+  },
+  "generatedAt": "2026-01-13T15:30:00.000Z"
+}

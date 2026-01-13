@@ -8,10 +8,12 @@ import {PluginRepoFactory} from "@aragon/osx/framework/plugin/repo/PluginRepoFac
 import {PluginRepo} from "@aragon/osx/framework/plugin/repo/PluginRepo.sol";
 import {PermissionLib} from "@aragon/osx-commons-contracts/src/permission/PermissionLib.sol";
 import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/ProxyLib.sol";
+import {IDAO} from "@aragon/osx/core/dao/DAO.sol";
 
 import {HarmonyHIPVotingSetup} from "../src/setup/HarmonyHIPVotingSetup.sol";
 import {HarmonyDelegationVotingSetup} from "../src/setup/HarmonyDelegationVotingSetup.sol";
 import {HarmonyValidatorOptInRegistry} from "../src/harmony/HarmonyValidatorOptInRegistry.sol";
+import {HIPPluginAllowlist} from "../src/harmony/HIPPluginAllowlist.sol";
 
 /**
  * Deploys Harmony HIP + Delegation voting plugin repos, plus the opt-in registry.
@@ -21,6 +23,7 @@ import {HarmonyValidatorOptInRegistry} from "../src/harmony/HarmonyValidatorOptI
  * - PLUGIN_REPO_FACTORY_ADDRESS
  * - PLUGIN_REPO_MAINTAINER_ADDRESS
  * - ORACLE_ADDRESS
+ * - MANAGEMENT_DAO_ADDRESS (Management DAO que controla o allowlist do HIP)
  * - HIP_PLUGIN_ENS_SUBDOMAIN (optional)
  * - DELEGATION_PLUGIN_ENS_SUBDOMAIN (optional)
  * - NETWORK_NAME (used for artifacts filename)
@@ -33,6 +36,7 @@ contract DeployHarmonyVotingReposScript is Script {
     PluginRepoFactory pluginRepoFactory;
     address pluginRepoMaintainerAddress;
     address oracleAddress;
+    address managementDaoAddress;
 
     string hipEnsSubdomain;
     string delegationEnsSubdomain;
@@ -43,6 +47,7 @@ contract DeployHarmonyVotingReposScript is Script {
     PluginRepo hipRepo;
     PluginRepo delegationRepo;
     HarmonyValidatorOptInRegistry optInRegistry;
+    HIPPluginAllowlist hipAllowlist;
 
     function _deployRepoWithoutRegistry(
         PluginRepoFactory factory,
@@ -106,6 +111,9 @@ contract DeployHarmonyVotingReposScript is Script {
         oracleAddress = vm.envAddress("ORACLE_ADDRESS");
         vm.label(oracleAddress, "Oracle");
 
+        managementDaoAddress = vm.envAddress("MANAGEMENT_DAO_ADDRESS");
+        vm.label(managementDaoAddress, "ManagementDAO");
+
         hipEnsSubdomain = vm.envOr("HIP_PLUGIN_ENS_SUBDOMAIN", string(""));
         delegationEnsSubdomain = vm.envOr("DELEGATION_PLUGIN_ENS_SUBDOMAIN", string(""));
 
@@ -133,7 +141,16 @@ contract DeployHarmonyVotingReposScript is Script {
     }
 
     function deployAll() internal {
-        hipSetup = new HarmonyHIPVotingSetup(oracleAddress);
+        // Deploy HIP allowlist (controlled by Management DAO)
+        hipAllowlist = new HIPPluginAllowlist();
+        address allowlistProxy = ProxyLib.deployUUPSProxy(
+            address(hipAllowlist),
+            abi.encodeCall(HIPPluginAllowlist.initialize, (IDAO(managementDaoAddress)))
+        );
+        hipAllowlist = HIPPluginAllowlist(allowlistProxy);
+
+        // Deploy plugin setups
+        hipSetup = new HarmonyHIPVotingSetup(oracleAddress, hipAllowlist);
         delegationSetup = new HarmonyDelegationVotingSetup(oracleAddress);
 
         // NOTE: Do NOT register on PluginRepoRegistry here (can revert with ENSNotSupported on Harmony).
@@ -151,6 +168,10 @@ contract DeployHarmonyVotingReposScript is Script {
     }
 
     function printDeployment() public view {
+        console2.log("HIP Plugin Allowlist:");
+        console2.log("- Allowlist Proxy:          ", address(hipAllowlist));
+        console2.log("");
+
         console2.log("Harmony HIP Voting:");
         console2.log("- Setup:                    ", address(hipSetup));
         console2.log("- Repo:                     ", address(hipRepo));
@@ -172,8 +193,10 @@ contract DeployHarmonyVotingReposScript is Script {
         string memory artifacts = "output";
 
         artifacts.serialize("oracle", oracleAddress);
+        artifacts.serialize("managementDao", managementDaoAddress);
         artifacts.serialize("pluginRepoMaintainer", pluginRepoMaintainerAddress);
 
+        artifacts.serialize("hipAllowlistProxy", address(hipAllowlist));
         artifacts.serialize("hipSetup", address(hipSetup));
         artifacts.serialize("hipRepo", address(hipRepo));
         artifacts.serialize("hipEnsDomain", string.concat(hipEnsSubdomain, ".plugin.dao.eth"));
