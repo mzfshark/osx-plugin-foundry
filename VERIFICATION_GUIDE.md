@@ -5,27 +5,29 @@ Devido a limitações do Blockscout na Harmony, você pode precisar verificar os
 ## Endereços dos Contratos
 
 ### Implementations (bytecode deployado)
+
 - **HIPPluginAllowlist**: `0xa7872b2159521c96D53EddD9C123843953C3aDeC`
 - **HarmonyHIPVotingPlugin**: `0x96CF3f105d1C8b784d51852D5dbF11c8389Ec1ec`
 - **HarmonyDelegationVotingPlugin**: `0xa107be98B1517890b9bB9E3C0f3a5746499e8866`
 
 ### Setup Contracts
+
 - **HarmonyHIPVotingSetup**: `0x08dF9f5984022D3539D505f79451938c43ed67aF`
   - Constructor: `(address _oracle, address _allowlist)`
   - Args: `0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1`, `0xb77F685442A72701df5c92E4EFCA70B6469F8Cc6`
-  
 - **HarmonyDelegationVotingSetup**: `0xaAc7608C92Dd9570c2715EE9C079096347Fb0cF1`
   - Constructor: `(address _oracle)`
   - Args: `0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1`
 
 ### Proxies & Registries
+
 - **HIPPluginAllowlist Proxy**: `0xb77F685442A72701df5c92E4EFCA70B6469F8Cc6`
   - Type: ERC1967Proxy
   - Implementation: `0xa7872b2159521c96D53EddD9C123843953C3aDeC`
-  
 - **HarmonyValidatorOptInRegistry**: `0xDe981B8DB1ECa238F3FBAB41e93cf4903e23d52b`
 
 ### Plugin Repos (não precisam verificação - são proxies do OSx)
+
 - **HarmonyHIPVotingPluginRepo**: `0xE51502ec20a59C6BE01809D19f06AC5e85eC3929`
 - **HarmonyDelegationVotingPluginRepo**: `0xf280B3798F53155F400FD96c555F7F554A977EE7`
 
@@ -56,18 +58,14 @@ forge verify-contract \
 ## Prioridade de Verificação
 
 **Alta prioridade** (contratos que usuários irão interagir):
+
 1. ✅ HIPPluginAllowlist Proxy - `0xb77F685442A72701df5c92E4EFCA70B6469F8Cc6`
 2. ✅ HarmonyHIPVotingSetup - `0x08dF9f5984022D3539D505f79451938c43ed67aF`
 3. ✅ HarmonyDelegationVotingSetup - `0xaAc7608C92Dd9570c2715EE9C079096347Fb0cF1`
 
-**Média prioridade** (para auditoria/transparência):
-4. HarmonyHIPVotingPlugin Implementation
-5. HarmonyDelegationVotingPlugin Implementation
-6. HIPPluginAllowlist Implementation
+**Média prioridade** (para auditoria/transparência): 4. HarmonyHIPVotingPlugin Implementation 5. HarmonyDelegationVotingPlugin Implementation 6. HIPPluginAllowlist Implementation
 
-**Baixa prioridade**:
-7. HarmonyValidatorOptInRegistry
-8. Plugin Repos (não precisam - são padrão do Aragon)
+**Baixa prioridade**: 7. HarmonyValidatorOptInRegistry 8. Plugin Repos (não precisam - são padrão do Aragon)
 
 ## Comandos Individuais para Retry
 
