@@ -1,0 +1,126 @@
+{
+  "chainId": 1666600000,
+  "explorerUrl": "https://explorer.harmony.one",
+  "blockscoutApi": "https://explorer.harmony.one/api",
+  "contracts": [
+    {
+      "priority": 1,
+      "name": "HarmonyHIPVotingSetup",
+      "address": "0x08dF9f5984022D3539D505f79451938c43ed67aF",
+      "sourcePath": "src/harmony/HarmonyHIPVotingSetup.sol",
+      "contractName": "HarmonyHIPVotingSetup",
+      "constructorArgs": {
+        "types": ["address", "address"],
+        "values": [
+          "0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1",
+          "0xb77F685442A72701df5c92E4EFCA70B6469F8Cc6"
+        ]
+      },
+      "encoded": "0x000000000000000000000000a55d9ef16af921b70fed1421c1d298ca5a3a18f1000000000000000000000000b77f685442a72701df5c92e4efca70b6469f8cc6"
+    },
+    {
+      "priority": 2,
+      "name": "HarmonyDelegationVotingSetup",
+      "address": "0xaAc7608C92Dd9570c2715EE9C079096347Fb0cF1",
+      "sourcePath": "src/harmony/HarmonyDelegationVotingSetup.sol",
+      "contractName": "HarmonyDelegationVotingSetup",
+      "constructorArgs": {
+        "types": ["address"],
+        "values": ["0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1"]
+      },
+      "encoded": "0x000000000000000000000000a55d9ef16af921b70fed1421c1d298ca5a3a18f1"
+    },
+    {
+      "priority": 3,
+      "name": "HIPPluginAllowlist (Proxy)",
+      "address": "0xb77F685442A72701df5c92E4EFCA70B6469F8Cc6",
+      "sourcePath": "src/harmony/HIPPluginAllowlist.sol",
+      "contractName": "HIPPluginAllowlist",
+      "constructorArgs": {
+        "types": ["address"],
+        "values": ["0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2"]
+      },
+      "encoded": "0x000000000000000000000000700cbbb4881d286628ca9ad3d9df390d9c0840a2"
+    },
+    {
+      "priority": 4,
+      "name": "HarmonyHIPVotingPlugin (Implementation)",
+      "address": "0x96CF3f105d1C8b784d51852D5dbF11c8389Ec1ec",
+      "sourcePath": "src/harmony/HarmonyHIPVotingPlugin.sol",
+      "contractName": "HarmonyHIPVotingPlugin",
+      "constructorArgs": {
+        "types": ["address"],
+        "values": ["0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1"]
+      },
+      "encoded": "0x000000000000000000000000a55d9ef16af921b70fed1421c1d298ca5a3a18f1"
+    },
+    {
+      "priority": 5,
+      "name": "HarmonyDelegationVotingPlugin (Implementation)",
+      "address": "0xa107be98B1517890b9bB9E3C0f3a5746499e8866",
+      "sourcePath": "src/harmony/HarmonyDelegationVotingPlugin.sol",
+      "contractName": "HarmonyDelegationVotingPlugin",
+      "constructorArgs": {
+        "types": ["address"],
+        "values": ["0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1"]
+      },
+      "encoded": "0x000000000000000000000000a55d9ef16af921b70fed1421c1d298ca5a3a18f1"
+    },
+    {
+      "priority": 6,
+      "name": "HIPPluginAllowlist (Implementation)",
+      "address": "0xa7872b2159521c96D53EddD9C123843953C3aDeC",
+      "sourcePath": "src/harmony/HIPPluginAllowlist.sol",
+      "contractName": "HIPPluginAllowlist",
+      "constructorArgs": {
+        "types": [],
+        "values": []
+      },
+      "encoded": "0x"
+    },
+    {
+      "priority": 7,
+      "name": "HarmonyValidatorOptInRegistry",
+      "address": "0xDe981B8DB1ECa238F3FBAB41e93cf4903e23d52b",
+      "sourcePath": "src/harmony/HarmonyValidatorOptInRegistry.sol",
+      "contractName": "HarmonyValidatorOptInRegistry",
+      "constructorArgs": {
+        "types": [],
+        "values": []
+      },
+      "encoded": "0x"
+    },
+    {
+      "priority": 8,
+      "name": "HarmonyHIPVotingPluginRepo",
+      "address": "0xE51502ec20a59C6BE01809D19f06AC5e85eC3929",
+      "sourcePath": "lib/osx/packages/contracts/src/framework/plugin/repo/PluginRepo.sol",
+      "contractName": "PluginRepo",
+      "constructorArgs": {
+        "types": [],
+        "values": []
+      },
+      "encoded": "0x"
+    },
+    {
+      "priority": 9,
+      "name": "HarmonyDelegationVotingPluginRepo",
+      "address": "0xf280B3798F53155F400FD96c555F7F554A977EE7",
+      "sourcePath": "lib/osx/packages/contracts/src/framework/plugin/repo/PluginRepo.sol",
+      "contractName": "PluginRepo",
+      "constructorArgs": {
+        "types": [],
+        "values": []
+      },
+      "encoded": "0x"
+    }
+  ],
+  "notes": {
+    "verification": "Use Sourcify or Blockscout web UI for manual verification",
+    "sourcifyUrl": "https://sourcify.dev",
+    "manualVerifyUrl": "https://explorer.harmony.one/address/{address}/contract-verification",
+    "compiler": "0.8.17",
+    "optimizations": true,
+    "runs": 200
+  }
+}

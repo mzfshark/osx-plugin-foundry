@@ -2,6 +2,20 @@
 
 Devido a limitações do Blockscout na Harmony, você pode precisar verificar os contratos manualmente via interface web.
 
+## Status da Verificação Automática
+
+⏳ **Verificação em andamento** via `verify-batch.sh` (rodando em background, PID 65283)
+
+📝 Para acompanhar o progresso:
+
+```bash
+tail -f verification.log
+```
+
+## Dados Consolidados
+
+Todos os dados de verificação estão em: `verification-data.json`
+
 ## Endereços dos Contratos
 
 ### Implementations (bytecode deployado)
