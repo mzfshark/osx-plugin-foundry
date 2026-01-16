@@ -1,5 +1,11 @@
 # Resumo Final - Verificação de Contratos Harmony
 
+## Update (2026-01-16)
+
+New Harmony mainnet deployment completed. Verification is pending for the new addresses.
+If Blockscout fails due to `eth_feeHistory` not available on the RPC, use `--legacy`
+or manual verification via the Blockscout UI/Sourcify.
+
 ## Status: Verificação Automática Inviável ⚠️
 
 ### Tentativas Realizadas

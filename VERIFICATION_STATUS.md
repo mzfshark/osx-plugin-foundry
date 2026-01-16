@@ -1,5 +1,23 @@
 # Harmony Contracts Verification Status
 
+Date: 2026-01-16
+
+## Update (Harmony mainnet redeploy)
+
+New deployment addresses (pending verification):
+
+- HIP Allowlist Proxy: `0x3653c14Ca7bef3E7B02ca04E65f6fc174D48c5C0`
+- HarmonyHIPVotingSetup: `0x8D151e5021F495e23FbBC3180b4EeA1a6B251Fd0`
+- HarmonyHIPVotingPluginRepo: `0x377Fa6d56066b81a7233043302B7e1569591253E`
+- HarmonyDelegationVotingSetup: `0xD872C4333CF09e3794DD8e8e8d4E09C0124E830D`
+- HarmonyDelegationVotingPluginRepo: `0x908a794F6e59872cB9b5Da0465a667833eEBdcFD`
+- HarmonyValidatorOptInRegistry: `0x1E1F6128f1e611c6bD9696a758aF9310017C993B`
+
+Verification status for the new deployment is **PENDING**. If Blockscout fails with
+`eth_feeHistory` errors, use `--legacy` or manual verification.
+
+---
+
 Data: 13 de janeiro de 2026
 
 ## ✅ Verificados com Sucesso (7/9)

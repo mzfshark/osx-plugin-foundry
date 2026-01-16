@@ -57,10 +57,24 @@
 
 ### 3) Deployment & Verification
 
-- [ ] Update/confirm deploy script (e.g., `DeployHarmonyVotingRepos.s.sol`).
-- [ ] Deploy to Harmony mainnet and update `deployed_contracts_harmony.json`.
+- [x] Update/confirm deploy script (e.g., `DeployHarmonyVotingRepos.s.sol`).
+- [x] Deploy to Harmony mainnet and update `deployed_contracts_harmony.json`.
 - [ ] Resolve manual verification for setup contracts (Blockscout/Sourcify) and update status docs.
 - [ ] Reconcile verification status inconsistencies across verification reports.
+
+#### Deployment Output (2026-01-16)
+
+- Allowlist Proxy: `0x3653c14Ca7bef3E7B02ca04E65f6fc174D48c5C0`
+- HIP Setup: `0x8D151e5021F495e23FbBC3180b4EeA1a6B251Fd0`
+- HIP Repo: `0x377Fa6d56066b81a7233043302B7e1569591253E`
+- Delegation Setup: `0xD872C4333CF09e3794DD8e8e8d4E09C0124E830D`
+- Delegation Repo: `0x908a794F6e59872cB9b5Da0465a667833eEBdcFD`
+- Opt-In Registry: `0x1E1F6128f1e611c6bD9696a758aF9310017C993B`
+
+#### Verification Note
+
+- Blockscout verification failed with: `eth_feeHistory` not available on RPC.
+- Use `--legacy` or manual Blockscout/Sourcify verification for setup contracts.
 
 ### 4) Integration & UX
 

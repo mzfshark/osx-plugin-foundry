@@ -58,7 +58,7 @@ yarn install
 
 ### 1. Deploy Harmony Voting Plugins
 
-```bash
+````bash
 cd osx-plugin-foundry
 
 forge script script/DeployHarmonyVotingRepos.s.sol \
@@ -66,7 +66,18 @@ forge script script/DeployHarmonyVotingRepos.s.sol \
   --broadcast \
   --verify \
   --etherscan-api-key <sua_api_key> # opcional
-```
+
+> **Note (English):** If the RPC does not support `eth_feeHistory`, rerun with `--legacy` to disable
+> EIP-1559 fee estimation:
+>
+> ```bash
+> forge script script/DeployHarmonyVotingRepos.s.sol \
+>   --rpc-url $HARMONY_MAINNET_RPC \
+>   --broadcast \
+>   --verify \
+>   --legacy
+> ```
+````
 
 > **Importante:** O script usa `ORACLE_ADDRESS=0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1` (Mainnet Band Oracle). Se você quiser usar outro oracle ou o Band Adapter (`0x0A87139b65399102f5F9B9B245531CF1A04ec86d`), atualize o `.env` antes do deploy.
 

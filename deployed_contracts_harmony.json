@@ -8,14 +8,14 @@
       "note": "To be deployed - HIP voting plugin implementation"
     },
     "HarmonyHIPVotingSetup": {
-      "address": "0x08dF9f5984022D3539D505f79451938c43ed67aF",
-      "txHash": "0xc29a92f5d22686d8eff61172b0626066bbba4d3b1e5051c26c6f7f2d9f0d6d39",
-      "note": "Deployed - HIP voting setup contract with allowlist check"
+      "address": "0x8D151e5021F495e23FbBC3180b4EeA1a6B251Fd0",
+      "txHash": "",
+      "note": "Deployed (2026-01-16) - HIP voting setup contract with allowlist check"
     },
     "HarmonyHIPVotingPluginRepo": {
-      "address": "0xE51502ec20a59C6BE01809D19f06AC5e85eC3929",
-      "txHash": "0xa7c6026f5f7ab082a7a5100a788d1e6175b021f67def857739297a93815e687a",
-      "note": "Deployed - HIP voting plugin repository (version 1.1 published)"
+      "address": "0x377Fa6d56066b81a7233043302B7e1569591253E",
+      "txHash": "",
+      "note": "Deployed (2026-01-16) - HIP voting plugin repository"
     },
     "HarmonyDelegationVotingPlugin": {
       "address": "",
@@ -23,29 +23,29 @@
       "note": "To be deployed - Delegation voting plugin implementation with validatorAddress storage"
     },
     "HarmonyDelegationVotingSetup": {
-      "address": "0xaAc7608C92Dd9570c2715EE9C079096347Fb0cF1",
-      "txHash": "0xdb8139008c0d0848d9e52ead47ca523865df30e3dac32315e5a9fafb836cfa8a",
-      "note": "Deployed - Delegation voting setup contract (requires validatorAddress param)"
+      "address": "0xD872C4333CF09e3794DD8e8e8d4E09C0124E830D",
+      "txHash": "",
+      "note": "Deployed (2026-01-16) - Delegation voting setup contract (requires validatorAddress param)"
     },
     "HarmonyDelegationVotingPluginRepo": {
-      "address": "0xf280B3798F53155F400FD96c555F7F554A977EE7",
-      "txHash": "0x1184783cb235d9a411a729c2e5ab09f20aaa3e38a68a83e0202a15573c381459",
-      "note": "Deployed - Delegation voting plugin repository (version 1.1 published)"
+      "address": "0x908a794F6e59872cB9b5Da0465a667833eEBdcFD",
+      "txHash": "",
+      "note": "Deployed (2026-01-16) - Delegation voting plugin repository"
     },
     "HIPPluginAllowlist": {
       "address": "",
       "txHash": "",
-      "note": "To be deployed - Allowlist contract for HIP plugin access control"
+      "note": "Implementation address pending - Allowlist contract for HIP plugin access control"
     },
     "HIPPluginAllowlistProxy": {
-      "address": "0xb77F685442A72701df5c92E4EFCA70B6469F8Cc6",
-      "txHash": "0x7f83d2ab97e46e17c98dbd1a018efb23a4ea3783b321b4a8acaf3dd1b776f11e",
-      "note": "Deployed - UUPS Proxy for HIP allowlist (initialized with Management DAO)"
+      "address": "0x3653c14Ca7bef3E7B02ca04E65f6fc174D48c5C0",
+      "txHash": "",
+      "note": "Deployed (2026-01-16) - UUPS Proxy for HIP allowlist (initialized with Management DAO)"
     },
     "HarmonyValidatorOptInRegistry": {
-      "address": "0xDe981B8DB1ECa238F3FBAB41e93cf4903e23d52b",
-      "txHash": "0x67c263019b9710604d8fd99312b484d57a1055d4778249ae2bfd397eb58fe1d2",
-      "note": "Deployed - Validator opt-in registry for voting delegation"
+      "address": "0x1E1F6128f1e611c6bD9696a758aF9310017C993B",
+      "txHash": "",
+      "note": "Deployed (2026-01-16) - Validator opt-in registry for voting delegation"
     }
   },
   "deployConfig": {
