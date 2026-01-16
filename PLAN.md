@@ -34,16 +34,26 @@
 
 ### 1) Specifications & Design
 
-- [ ] Confirm `validatorAddress` parameter in `HarmonyDelegationSetup` and how it is persisted.
-- [ ] Define the off-chain weight resolution schema (delegator address → stake) from Harmony API.
-- [ ] Confirm how intermediate snapshots are exposed to UI (read-only) without on-chain writes.
-- [ ] Lock the final snapshot rule to match backend logic (`endEpoch - 2`).
+- [x] Confirm `validatorAddress` parameter in `HarmonyDelegationSetup` and how it is persisted.
+- [x] Define the off-chain weight resolution schema (delegator address → stake) from Harmony API.
+- [x] Confirm how intermediate snapshots are exposed to UI (read-only) without on-chain writes.
+- [x] Lock the final snapshot rule to match backend logic (`endEpoch - 2`).
+
+#### Off-chain Weight Resolution Schema
+
+- Source: Harmony RPC `hmyv2_getValidatorInformationByBlockNumber` on https://api.harmony.one.
+- Input: `validatorAddress` (installation param) + `snapshotBlock` (derived from `endDate`).
+- Output: list of delegations under `validator.delegations`.
+- Mapping:
+  - `delegator_address` (or `delegatorAddress` / `delegator`) → `address`
+  - `amount` (or `delegatedAmount`) → `votingPower`
+- Resulting entries feed Merkle root computation for finalization.
 
 ### 2) Contract Implementation
 
-- [ ] Verify or implement `HarmonyDelegation` plugin contract in `src/harmony/`.
-- [ ] Verify or implement setup contract (e.g., `HarmonyDelegationSetup.sol`) with `validatorAddress` install param.
-- [ ] Ensure native token usage is explicit and documented.
+- [x] Verify or implement `HarmonyDelegation` plugin contract in `src/harmony/`.
+- [x] Verify or implement setup contract (e.g., `HarmonyDelegationSetup.sol`) with `validatorAddress` install param.
+- [x] Ensure native token usage is explicit and documented.
 
 ### 3) Deployment & Verification
 
@@ -60,15 +70,29 @@
 
 ### 5) Testing & Validation
 
-- [ ] Add or update tests for installation params and voting lifecycle.
-- [ ] Validate snapshot calculation in a realistic scenario (Harmony mainnet or fork).
-- [ ] Confirm on-chain write happens only after `endDate`.
+- [x] Add or update tests for installation params and voting lifecycle.
+- [x] Validate snapshot calculation in a realistic scenario (Harmony mainnet or fork).
+- [x] Confirm on-chain write happens only after `endDate`.
+
+#### Snapshot Validation Result (Harmony mainnet)
+
+- Validator: `0x3cb9F2120Ad5F5E1d58088b261053B62CaC0cdE8`
+- endDate (unix): `1768570403`
+- endBlock: `83810922`
+- endEpoch: `2730`
+- snapshotEpoch: `2728`
+- snapshotBlock: `83755007`
+- snapshotTimestamp (unix): `1768457992`
+- delegationsCount: `1747`
+- totalDelegated (wei): `33958666148397424876964771`
+- selfStake (wei): `0`
+- totalPower (wei): `33958666148397424876964771`
 
 ### 6) Documentation
 
-- [ ] Update `DEPLOY_GUIDE.md` with HarmonyDelegation specifics.
-- [ ] Update `DELEGATION_INSTALL_ERROR.md` with current resolution paths.
-- [ ] Add a short FAQ about snapshot timing and weight resolution.
+- [x] Update `DEPLOY_GUIDE.md` with HarmonyDelegation specifics.
+- [x] Update `DELEGATION_INSTALL_ERROR.md` with current resolution paths.
+- [x] Add a short FAQ about snapshot timing and weight resolution.
 
 ## Dependencies
 

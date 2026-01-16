@@ -184,3 +184,25 @@ cast call 0xf280B3798F53155F400FD96c555F7F554A977EE7 \
 ```bash
 cast call <DAO_ADDRESS> "plugins()(address[])" --rpc-url https://api.harmony.one
 ```
+
+## Delegation Voting Notes (English)
+
+- **Weight source**: `hmyv2_getValidatorInformationByBlockNumber` from https://api.harmony.one using the
+  `validatorAddress` and the snapshot block.
+- **Snapshot rule**: The final snapshot uses the last epoch after `endDate` (backend computes
+  `snapshotEpoch = endEpoch - 2`).
+- **On-chain write**: Merkle root and voting power are submitted only after `endDate`.
+- **Token**: Native token stake (address `0x0000000000000000000000000000000000000000`).
+
+## FAQ (English)
+
+**Q: Why does the snapshot use `endEpoch - 2`?**
+
+A: The backend computes `endEpoch` from the last block at or before `endDate`. The snapshot uses the
+penultimate epoch to avoid inconsistencies during epoch transitions and to ensure stable delegation
+data when finalizing the vote.
+
+**Q: Do intermediate snapshots affect the final tally?**
+
+A: No. Intermediate snapshots are UI-only. The Merkle root and voting power are written on-chain only
+after `endDate`.

@@ -151,6 +151,11 @@ HARMONY_VOTING_FINALIZER_TARGETS='[
 
 **Nota:** Para Delegation mode, o `validatorAddress` será lido automaticamente do contrato se não fornecido na config.
 
+**Delegation voting data (English):** Delegation voting weights are resolved off-chain from Harmony RPC
+(`hmyv2_getValidatorInformationByBlockNumber`) using the `validatorAddress` and a snapshot block derived
+from `endDate`. Intermediate snapshots are for UI visibility only; the Merkle root and voting power are
+written on-chain only after `endDate`.
+
 ## Deploy - AragonOSX (NativeTokenVoting)
 
 ### 1. Deploy via Hardhat
