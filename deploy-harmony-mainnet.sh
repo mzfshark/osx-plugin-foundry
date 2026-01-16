@@ -19,8 +19,8 @@ if [ ! -f .env ]; then
     exit 1
 fi
 
-# Load environment variables
-export $(grep -v '^#' .env | xargs)
+# Load environment variables (only valid KEY=VALUE lines, strip inline comments)
+export $(grep -E '^[A-Za-z_][A-Za-z0-9_]*=' .env | sed -E 's/[[:space:]]+#.*$//' | tr -d '\r' | xargs)
 
 # Validate required env vars
 if [ -z "$DEPLOYMENT_PRIVATE_KEY" ]; then

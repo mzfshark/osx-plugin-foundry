@@ -8,12 +8,12 @@
       "note": "To be deployed - HIP voting plugin implementation"
     },
     "HarmonyHIPVotingSetup": {
-      "address": "0x8D151e5021F495e23FbBC3180b4EeA1a6B251Fd0",
+      "address": "0xD872C4333CF09e3794DD8e8e8d4E09C0124E830D",
       "txHash": "",
       "note": "Deployed (2026-01-16) - HIP voting setup contract with allowlist check"
     },
     "HarmonyHIPVotingPluginRepo": {
-      "address": "0x377Fa6d56066b81a7233043302B7e1569591253E",
+      "address": "0xE6E54ac81EFB41fdf0D559eeae51DbFB3C750088",
       "txHash": "",
       "note": "Deployed (2026-01-16) - HIP voting plugin repository"
     },
@@ -23,27 +23,27 @@
       "note": "To be deployed - Delegation voting plugin implementation with validatorAddress storage"
     },
     "HarmonyDelegationVotingSetup": {
-      "address": "0xD872C4333CF09e3794DD8e8e8d4E09C0124E830D",
+      "address": "0x377Fa6d56066b81a7233043302B7e1569591253E",
       "txHash": "",
       "note": "Deployed (2026-01-16) - Delegation voting setup contract (requires validatorAddress param)"
     },
     "HarmonyDelegationVotingPluginRepo": {
-      "address": "0x908a794F6e59872cB9b5Da0465a667833eEBdcFD",
+      "address": "0x4ac3dAfD88DeFd9a000076365e28B3dE3A862700",
       "txHash": "",
       "note": "Deployed (2026-01-16) - Delegation voting plugin repository"
     },
     "HIPPluginAllowlist": {
-      "address": "",
+      "address": "0x3653c14Ca7bef3E7B02ca04E65f6fc174D48c5C0",
       "txHash": "",
       "note": "Implementation address pending - Allowlist contract for HIP plugin access control"
     },
     "HIPPluginAllowlistProxy": {
-      "address": "0x3653c14Ca7bef3E7B02ca04E65f6fc174D48c5C0",
+      "address": "0x8D151e5021F495e23FbBC3180b4EeA1a6B251Fd0",
       "txHash": "",
       "note": "Deployed (2026-01-16) - UUPS Proxy for HIP allowlist (initialized with Management DAO)"
     },
     "HarmonyValidatorOptInRegistry": {
-      "address": "0x1E1F6128f1e611c6bD9696a758aF9310017C993B",
+      "address": "0x9ec4D1ea72ADA189Ae81328CB80c3276C5dCbe5d",
       "txHash": "",
       "note": "Deployed (2026-01-16) - Validator opt-in registry for voting delegation"
     }
