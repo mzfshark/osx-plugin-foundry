@@ -7,15 +7,15 @@ set -e
 CHAIN_ID="1666600000"
 EXPLORER_URL="https://explorer.harmony.one/api"
 
-HIP_SETUP="0x8D151e5021F495e23FbBC3180b4EeA1a6B251Fd0"
-DELEGATION_SETUP="0xD872C4333CF09e3794DD8e8e8d4E09C0124E830D"
-VALIDATOR_OPT_IN="0x1E1F6128f1e611c6bD9696a758aF9310017C993B"
-HIP_ALLOWLIST_PROXY="0x3653c14Ca7bef3E7B02ca04E65f6fc174D48c5C0"
+HIP_SETUP="0xD872C4333CF09e3794DD8e8e8d4E09C0124E830D"
+DELEGATION_SETUP="0x377Fa6d56066b81a7233043302B7e1569591253E"
+VALIDATOR_OPT_IN="0x9ec4D1ea72ADA189Ae81328CB80c3276C5dCbe5d"
+HIP_ALLOWLIST_PROXY="0x8D151e5021F495e23FbBC3180b4EeA1a6B251Fd0"
 
 # Optional (fill if known)
-HIP_ALLOWLIST_IMPL=""
-HIP_PLUGIN_IMPL=""
-DELEGATION_PLUGIN_IMPL=""
+HIP_ALLOWLIST_IMPL="0x3653c14Ca7bef3E7B02ca04E65f6fc174D48c5C0"
+HIP_PLUGIN_IMPL="0x3a3be5C65EDFF8Cb52df0A6fA664d83B63B177bf"
+DELEGATION_PLUGIN_IMPL="0x000286acDa5757cE8fDf00dA277b875bbb635eB9"
 
 # Required constructor args
 ORACLE_ADDRESS="0xA55d9ef16Af921b70Fed1421C1D298Ca5A3a18F1"
@@ -69,7 +69,6 @@ if [[ -n "$HIP_ALLOWLIST_IMPL" ]]; then
     --chain-id "$CHAIN_ID" \
     --verifier blockscout \
     --verifier-url "$EXPLORER_URL" \
-    --constructor-args $(cast abi-encode "constructor(address,address)" "$ORACLE_ADDRESS" "$ALLOWLIST_ADDRESS") \
     --watch || echo "⚠️  Verification failed or already verified"
 fi
 
@@ -79,6 +78,18 @@ if [[ -n "$HIP_PLUGIN_IMPL" ]]; then
   forge verify-contract \
     "$HIP_PLUGIN_IMPL" \
     src/harmony/HarmonyHIPVotingPlugin.sol:HarmonyHIPVotingPlugin \
+    --chain-id "$CHAIN_ID" \
+    --verifier blockscout \
+    --verifier-url "$EXPLORER_URL" \
+    --watch || echo "⚠️  Verification failed or already verified"
+fi
+
+echo ""
+if [[ -n "$DELEGATION_PLUGIN_IMPL" ]]; then
+  echo "[6/6] Verifying HarmonyDelegationVotingPlugin implementation..."
+  forge verify-contract \
+    "$DELEGATION_PLUGIN_IMPL" \
+    src/harmony/HarmonyDelegationVotingPlugin.sol:HarmonyDelegationVotingPlugin \
     --chain-id "$CHAIN_ID" \
     --verifier blockscout \
     --verifier-url "$EXPLORER_URL" \
