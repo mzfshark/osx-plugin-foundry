@@ -123,3 +123,41 @@
 - Final on-chain write occurs only after `endDate` using snapshot epoch `endEpoch - 2`.
 - Deployment artifacts and verification status are consistent and documented.
 - Frontend install flow works without cached repo mismatch.
+
+## E2E Reliability (New Requirements)
+
+### Uninstall Reliability
+
+- [ ] Define uninstall invariants (no orphan permissions, no stuck executors)
+- [ ] Verify uninstall path in setup contracts revokes all granted permissions
+- [ ] Ensure uninstall works via governance permissions (not just admin)
+- [ ] Add tests for install → uninstall → re-install cycles
+- [ ] Document uninstall requirements and expected behavior
+
+### Event Completeness for Indexing
+
+- [ ] Verify all critical events are emitted (install, uninstall, proposal lifecycle)
+- [ ] Ensure events include all data needed by indexers (avoid tx lookup where possible)
+- [ ] Add creator/executor addresses to events where missing
+- [ ] Document event schemas for backend/subgraph teams
+
+### Native Token Voting Support
+
+- [ ] Implement RPC-based power provider for native token (wallet + staked)
+- [ ] Add support for DAO action execution in voting contracts
+- [ ] Validate permission model for native token execution
+- [ ] Add tests for native token value transfer execution
+- [ ] Document native token voting setup and execution flow
+
+### Metadata Registry (Future Enhancement)
+
+- [ ] Design on-chain metadata registry contract (hash → URI mapping)
+- [ ] Define access control for metadata updates
+- [ ] Plan migration path from bytes32 to registry-based metadata
+- [ ] Document registry integration for backend/app
+
+## Related Plans
+
+- [../AragonOSX/PLAN.md](../AragonOSX/PLAN.md) - E2E reliability epic
+- [../aragon-app/PLAN.md](../aragon-app/PLAN.md) - UI/UX updates
+- [../Aragon-app-backend/PLAN.md](../Aragon-app-backend/PLAN.md) - Backend indexing
