@@ -1,0 +1,22 @@
+22	OPEN	Add a short FAQ about snapshot timing and weight resolution.		2026-01-17T20:31:51Z
+21	OPEN	Update `DELEGATION_INSTALL_ERROR.md` with current resolution paths.		2026-01-17T20:31:45Z
+20	OPEN	Update `DEPLOY_GUIDE.md` with HarmonyDelegation specifics.		2026-01-17T20:31:38Z
+19	OPEN	Confirm on-chain write happens only after `endDate`.		2026-01-17T20:31:30Z
+18	OPEN	Validate snapshot calculation in a realistic scenario (Harmony mainnet or fork).		2026-01-17T20:31:18Z
+17	OPEN	Add or update tests for installation params and voting lifecycle.		2026-01-17T20:31:11Z
+16	OPEN	Validate install flow with correct `validatorAddress` input.		2026-01-17T20:31:03Z
+15	OPEN	Add or update installation guidance and troubleshooting notes.		2026-01-17T20:30:58Z
+14	OPEN	Ensure frontend recognizes the correct plugin repo addresses (avoid cached old repo).		2026-01-17T20:30:53Z
+13	OPEN	Reconcile verification status inconsistencies across verification reports.		2026-01-17T20:30:47Z
+12	OPEN	Resolve manual verification for setup contracts (Blockscout/Sourcify) and update status docs.		2026-01-17T20:30:40Z
+11	OPEN	Deploy to Harmony mainnet and update `deployed_contracts_harmony.json`.		2026-01-17T20:30:33Z
+10	OPEN	Update/confirm deploy script (e.g., `DeployHarmonyVotingRepos.s.sol`).		2026-01-17T20:30:26Z
+9	OPEN	Ensure native token usage is explicit and documented.		2026-01-17T20:30:21Z
+8	OPEN	Verify or implement setup contract (e.g., `HarmonyDelegationSetup.sol`) with `validatorAddress` install param.		2026-01-17T20:30:15Z
+7	OPEN	Verify or implement `HarmonyDelegation` plugin contract in `src/harmony/`.		2026-01-17T20:30:09Z
+6	OPEN	Lock the final snapshot rule to match backend logic (`endEpoch - 2`).		2026-01-17T20:30:03Z
+5	OPEN	Confirm how intermediate snapshots are exposed to UI (read-only) without on-chain writes.		2026-01-17T20:29:58Z
+4	OPEN	Define the off-chain weight resolution schema (delegator address → stake) from Harmony API.		2026-01-17T20:29:52Z
+3	OPEN	Confirm `validatorAddress` parameter in `HarmonyDelegationSetup` and how it is persisted.		2026-01-17T20:29:47Z
+2	OPEN	[Contracts] Harmony Voting Uninstall Safety + Native Token Executor	enhancement, harmony, contracts, plugin	2026-01-17T17:05:01Z
+1	OPEN	[Plan] HarmonyDelegation execution	enhancement	2026-01-17T20:31:51Z
