@@ -3,13 +3,22 @@
 /* global require, process, console */
 const fs = require("fs");
 const { execSync } = require("child_process");
-const crypto = require('crypto');
+const crypto = require("crypto");
 
-function sleep(ms) { const start = Date.now(); while (Date.now() - start < ms) {} }
+function sleep(ms) {
+  const start = Date.now();
+  while (Date.now() - start < ms) {}
+}
 function runGh(args, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try { return execSync('gh', args, {encoding: 'utf8'}); }
-    catch (e) { if (attempt === maxRetries) throw e; const backoff = 200 * attempt; console.error('gh command failed, retrying in', backoff, 'ms'); sleep(backoff); }
+    try {
+      return execSync("gh", args, { encoding: "utf8" });
+    } catch (e) {
+      if (attempt === maxRetries) throw e;
+      const backoff = 200 * attempt;
+      console.error("gh command failed, retrying in", backoff, "ms");
+      sleep(backoff);
+    }
   }
 }
 
@@ -45,7 +54,13 @@ function findExistingIssueByTitleOrId(title, stableId) {
   const issues = JSON.parse(out);
   let found = issues.find((i) => i.title === title);
   if (found) return found;
-  if (stableId) { found = issues.find(i => typeof i.body === 'string' && i.body.includes(`Stable-ID: ${stableId}`)); if(found) return found; }
+  if (stableId) {
+    found = issues.find(
+      (i) =>
+        typeof i.body === "string" && i.body.includes(`Stable-ID: ${stableId}`),
+    );
+    if (found) return found;
+  }
   return null;
 }
 
@@ -60,7 +75,7 @@ function createIssue(title, body, labels = []) {
     `body=${body}`,
   ];
   if (labels.length) args.push("-f", `labels=${JSON.stringify(labels)}`);
-  const out = runGh("gh" === 'gh' ? args : args, 3); // keep shape for exec
+  const out = runGh("gh" === "gh" ? args : args, 3); // keep shape for exec
   return JSON.parse(out);
 }
 
@@ -101,7 +116,10 @@ function attachToProjectIfPresent(issueObj) {
 
 console.log("Syncing issues for", json.file);
 for (const it of json.items) {
-  const stableId = crypto.createHash('sha1').update(`${json.file}:${it.line}:${it.text}`).digest('hex');
+  const stableId = crypto
+    .createHash("sha1")
+    .update(`${json.file}:${it.line}:${it.text}`)
+    .digest("hex");
   const title = `${it.text} [source:${json.file}]`;
   let body = `Source: ${json.file}\n\nAutomated sync from PLAN.md.\n\nStable-ID: ${stableId}`;
   const existing = findExistingIssueByTitleOrId(title, stableId);
@@ -118,10 +136,21 @@ for (const it of json.items) {
   } else if (existing) {
     console.log("Issue already exists:", existing.number, title);
     if (!existing.body || !existing.body.includes(`Stable-ID: ${stableId}`)) {
-      try { updateIssue(existing.number, { body: (existing.body || '') + '\n\nStable-ID: ' + stableId }); }
-      catch (e) { console.error('Failed to update existing issue with Stable-ID', e.message); }
+      try {
+        updateIssue(existing.number, {
+          body: (existing.body || "") + "\n\nStable-ID: " + stableId,
+        });
+      } catch (e) {
+        console.error(
+          "Failed to update existing issue with Stable-ID",
+          e.message,
+        );
+      }
     }
-    if (projectNodeId) { const res = attachToProjectIfPresent(existing); if (res) console.log('Ensured attached to project'); }
+    if (projectNodeId) {
+      const res = attachToProjectIfPresent(existing);
+      if (res) console.log("Ensured attached to project");
+    }
   }
 }
 
@@ -132,7 +161,9 @@ try {
     process.env.GITHUB_REPOSITORY ||
     execSync("git config --get remote.origin.url").toString().trim();
   console.log("Repository:", repo);
-} catch (e) { void e; }
+} catch (e) {
+  void e;
+}
 
 console.log(
   "gh-issue-ops.js is a stub — implement octokit or gh api calls here",
