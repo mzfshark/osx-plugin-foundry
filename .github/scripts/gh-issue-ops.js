@@ -2,17 +2,19 @@
 /* eslint-env node */
 /* global require, process, console */
 const fs = require("fs");
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
 const crypto = require("crypto");
 
 function sleep(ms) {
   const start = Date.now();
-  while (Date.now() - start < ms) {}
+  while (Date.now() - start < ms) {
+    0;
+  }
 }
 function runGh(args, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      return execSync("gh", args, { encoding: "utf8" });
+      return execFileSync("gh", args, { encoding: "utf8" });
     } catch (e) {
       if (attempt === maxRetries) throw e;
       const backoff = 200 * attempt;
@@ -37,11 +39,20 @@ if (pIdx !== -1 && process.argv[pIdx + 1])
 function getRepo() {
   if (process.env.GITHUB_REPOSITORY) return process.env.GITHUB_REPOSITORY;
   try {
-    const out = execSync("git", ["config", "--get", "remote.origin.url"], {
+    const out = execFileSync("git", ["config", "--get", "remote.origin.url"], {
       encoding: "utf8",
     }).trim();
     const m = out.match(/github\.com[:/](.+)\/([^/.]+)(?:\.git)?$/);
     if (m) return `${m[1]}/${m[2]}`;
+  } catch (e) {
+    void e;
+  }
+  try {
+    const out = runGh(
+      ["repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner"],
+      1,
+    );
+    if (out) return out.trim();
   } catch (e) {
     void e;
   }
@@ -74,8 +85,10 @@ function createIssue(title, body, labels = []) {
     "-f",
     `body=${body}`,
   ];
-  if (labels.length) args.push("-f", `labels=${JSON.stringify(labels)}`);
-  const out = runGh("gh" === "gh" ? args : args, 3); // keep shape for exec
+  if (labels.length) {
+    for (const lab of labels) args.push("-f", `labels[]=${lab}`);
+  }
+  const out = runGh(args, 3);
   return JSON.parse(out);
 }
 
@@ -159,7 +172,11 @@ console.log("Done");
 try {
   const repo =
     process.env.GITHUB_REPOSITORY ||
-    execSync("git config --get remote.origin.url").toString().trim();
+    execFileSync("git", ["config", "--get", "remote.origin.url"], {
+      encoding: "utf8",
+    })
+      .toString()
+      .trim();
   console.log("Repository:", repo);
 } catch (e) {
   void e;

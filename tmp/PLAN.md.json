@@ -1,0 +1,195 @@
+{
+  "file": "PLAN.md",
+  "items": [
+    {
+      "text": "Confirm `validatorAddress` parameter in `HarmonyDelegationSetup` and how it is persisted.",
+      "checked": true,
+      "line": 37
+    },
+    {
+      "text": "Define the off-chain weight resolution schema (delegator address → stake) from Harmony API.",
+      "checked": true,
+      "line": 38
+    },
+    {
+      "text": "Confirm how intermediate snapshots are exposed to UI (read-only) without on-chain writes.",
+      "checked": true,
+      "line": 39
+    },
+    {
+      "text": "Lock the final snapshot rule to match backend logic (`endEpoch - 2`).",
+      "checked": true,
+      "line": 40
+    },
+    {
+      "text": "Verify or implement `HarmonyDelegation` plugin contract in `src/harmony/`.",
+      "checked": true,
+      "line": 54
+    },
+    {
+      "text": "Verify or implement setup contract (e.g., `HarmonyDelegationSetup.sol`) with `validatorAddress` install param.",
+      "checked": true,
+      "line": 55
+    },
+    {
+      "text": "Ensure native token usage is explicit and documented.",
+      "checked": true,
+      "line": 56
+    },
+    {
+      "text": "Update/confirm deploy script (e.g., `DeployHarmonyVotingRepos.s.sol`).",
+      "checked": true,
+      "line": 60
+    },
+    {
+      "text": "Deploy to Harmony mainnet and update `deployed_contracts_harmony.json`.",
+      "checked": true,
+      "line": 61
+    },
+    {
+      "text": "Resolve manual verification for setup contracts (Blockscout/Sourcify) and update status docs.",
+      "checked": false,
+      "line": 62
+    },
+    {
+      "text": "Reconcile verification status inconsistencies across verification reports.",
+      "checked": false,
+      "line": 63
+    },
+    {
+      "text": "Ensure frontend recognizes the correct plugin repo addresses (avoid cached old repo).",
+      "checked": false,
+      "line": 81
+    },
+    {
+      "text": "Add or update installation guidance and troubleshooting notes.",
+      "checked": false,
+      "line": 82
+    },
+    {
+      "text": "Validate install flow with correct `validatorAddress` input.",
+      "checked": false,
+      "line": 83
+    },
+    {
+      "text": "Add or update tests for installation params and voting lifecycle.",
+      "checked": true,
+      "line": 87
+    },
+    {
+      "text": "Validate snapshot calculation in a realistic scenario (Harmony mainnet or fork).",
+      "checked": true,
+      "line": 88
+    },
+    {
+      "text": "Confirm on-chain write happens only after `endDate`.",
+      "checked": true,
+      "line": 89
+    },
+    {
+      "text": "Update `DEPLOY_GUIDE.md` with HarmonyDelegation specifics.",
+      "checked": true,
+      "line": 107
+    },
+    {
+      "text": "Update `DELEGATION_INSTALL_ERROR.md` with current resolution paths.",
+      "checked": true,
+      "line": 108
+    },
+    {
+      "text": "Add a short FAQ about snapshot timing and weight resolution.",
+      "checked": true,
+      "line": 109
+    },
+    {
+      "text": "Define uninstall invariants (no orphan permissions, no stuck executors)",
+      "checked": false,
+      "line": 131
+    },
+    {
+      "text": "Verify uninstall path in setup contracts revokes all granted permissions",
+      "checked": false,
+      "line": 132
+    },
+    {
+      "text": "Ensure uninstall works via governance permissions (not just admin)",
+      "checked": false,
+      "line": 133
+    },
+    {
+      "text": "Add tests for install → uninstall → re-install cycles",
+      "checked": false,
+      "line": 134
+    },
+    {
+      "text": "Document uninstall requirements and expected behavior",
+      "checked": false,
+      "line": 135
+    },
+    {
+      "text": "Verify all critical events are emitted (install, uninstall, proposal lifecycle)",
+      "checked": false,
+      "line": 139
+    },
+    {
+      "text": "Ensure events include all data needed by indexers (avoid tx lookup where possible)",
+      "checked": false,
+      "line": 140
+    },
+    {
+      "text": "Add creator/executor addresses to events where missing",
+      "checked": false,
+      "line": 141
+    },
+    {
+      "text": "Document event schemas for backend/subgraph teams",
+      "checked": false,
+      "line": 142
+    },
+    {
+      "text": "Implement RPC-based power provider for native token (wallet + staked)",
+      "checked": false,
+      "line": 146
+    },
+    {
+      "text": "Add support for DAO action execution in voting contracts",
+      "checked": false,
+      "line": 147
+    },
+    {
+      "text": "Validate permission model for native token execution",
+      "checked": false,
+      "line": 148
+    },
+    {
+      "text": "Add tests for native token value transfer execution",
+      "checked": false,
+      "line": 149
+    },
+    {
+      "text": "Document native token voting setup and execution flow",
+      "checked": false,
+      "line": 150
+    },
+    {
+      "text": "Design on-chain metadata registry contract (hash → URI mapping)",
+      "checked": false,
+      "line": 154
+    },
+    {
+      "text": "Define access control for metadata updates",
+      "checked": false,
+      "line": 155
+    },
+    {
+      "text": "Plan migration path from bytes32 to registry-based metadata",
+      "checked": false,
+      "line": 156
+    },
+    {
+      "text": "Document registry integration for backend/app",
+      "checked": false,
+      "line": 157
+    }
+  ]
+}
