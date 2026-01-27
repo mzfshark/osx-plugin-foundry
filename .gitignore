@@ -19,3 +19,4 @@ report
 broadcast/*
 broadcast/*/31337/
 .gitissuer
+tmp/

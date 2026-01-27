@@ -71,11 +71,11 @@ Implement and ship HarmonyDelegation voting strategy with validator-based delega
 
 ### FEATURE-004: Integration & UX
 
-[labels:type:feature, area:frontend, area:contracts] [status:TODO] [priority:MEDIUM] [estimate:16h] [start:2026-01-21] [end:2026-01-25]
+[labels:type:feature, area:frontend, area:contracts] [status:IN_PROGRESS] [priority:MEDIUM] [estimate:16h] [start:2026-01-21] [end:2026-01-25]
 
-- [ ] Ensure frontend recognizes correct plugin repo addresses [labels:type:task, area:frontend] [status:TODO] [priority:HIGH] [estimate:6h] [start:2026-01-21] [end:2026-01-22]
+- [x] Ensure frontend recognizes correct plugin repo addresses [labels:type:task, area:frontend] [status:DONE] [priority:HIGH] [estimate:6h] [start:2026-01-21] [end:2026-01-22]
 - [ ] Add/update installation guidance and troubleshooting notes [labels:type:docs, area:frontend] [status:TODO] [priority:MEDIUM] [estimate:4h] [start:2026-01-23] [end:2026-01-24]
-- [ ] Validate install flow with correct `validatorAddress` input [labels:type:qa, area:frontend] [status:TODO] [priority:HIGH] [estimate:6h] [start:2026-01-24] [end:2026-01-25]
+- [x] Validate install flow with correct `validatorAddress` input [labels:type:qa, area:frontend] [status:DONE] [priority:HIGH] [estimate:6h] [start:2026-01-24] [end:2026-01-26]
 
 ### FEATURE-005: Testing & Validation
 
@@ -127,7 +127,7 @@ Implement and ship HarmonyDelegation voting strategy with validator-based delega
 - **Milestone 1:** Specifications & Design — 2026-01-10 → 2026-01-14 — ✅ DONE
 - **Milestone 2:** Contract Implementation — 2026-01-14 → 2026-01-16 — ✅ DONE
 - **Milestone 3:** Deployment & Verification — 2026-01-16 → 2026-01-20 — 🔄 80%
-- **Milestone 4:** Integration & UX — 2026-01-21 → 2026-01-25 — ⬜ 0%
+- **Milestone 4:** Integration & UX — 2026-01-21 → 2026-01-25 — 🔄 67%
 - **Milestone 5:** Testing & Validation — 2026-01-18 → 2026-01-22 — ✅ DONE
 - **Milestone 6:** Documentation — 2026-01-22 → 2026-01-24 — ✅ DONE
 - **Milestone 7:** E2E Reliability (Epic) — 2026-02-01 → 2026-02-28 — ⬜ 0%
