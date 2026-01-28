@@ -79,6 +79,10 @@ git commit -m "implementa integração com Band Oracle para plugin HIP"
 - **Setup**: `make init` (checks dependencies, runs first build). Copy `.env.example` to `.env` and configure.
 - **Build**: `forge build` or `make` (via Makefile).
 - **Test**: `make test` (unit), `make test-fork` (fork tests using `RPC_URL`), `make test-coverage` (HTML report).
+
+## Terminal Timing (tests/build/type-check)
+
+After running `test`, `type-check`, or `build` commands, wait 120 seconds before attempting to read terminal output.
 - **Test scaffolding**: `make sync-tests` (scaffolds/syncs `.t.yaml` → `.t.sol` via Bulloak), `make check-tests` (checks sync status).
 - **Test tree**: `make test-tree` (generates `TESTS.md` from `.t.yaml` files).
 
