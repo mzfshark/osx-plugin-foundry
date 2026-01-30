@@ -15,21 +15,42 @@ contract HarmonyDelegationVotingPlugin is HarmonyVotingBase {
     /// @notice The validator address whose delegators can vote in this DAO.
     address public validatorAddress;
 
+    /// @notice The process key (UI/indexer discriminator) associated with this plugin instance.
+    bytes32 public processKey;
+
     /// @notice Emitted when the validator address is updated.
     /// @param oldAddress The previous validator address.
     /// @param newAddress The new validator address.
     event ValidatorAddressUpdated(address indexed oldAddress, address indexed newAddress);
 
+    /// @notice Emitted when the process key is configured.
+    /// @param processKey The configured process key.
+    event ProcessKeyConfigured(bytes32 indexed processKey);
+
     /// @notice Thrown when trying to set an invalid validator address.
     /// @param validator The invalid validator address provided.
     error InvalidValidatorAddress(address validator);
 
-    /// @notice Initializes the plugin with the DAO and validator address.
+    /// @notice Thrown when trying to set an invalid process key.
+    /// @param key The invalid process key.
+    error InvalidProcessKey(bytes32 key);
+
+    /// @notice Initializes the plugin with the DAO, validator address and process key.
     /// @param _dao The DAO contract.
     /// @param _validatorAddress The initial validator address whose delegators can vote.
-    function initialize(IDAO _dao, address _validatorAddress) external initializer {
+    /// @param _processKey The process key used by offchain systems to categorize proposals for this plugin.
+    function initialize(IDAO _dao, address _validatorAddress, bytes32 _processKey) external initializer {
         __HarmonyVotingBase_init(_dao);
         _setValidatorAddress(_validatorAddress);
+        _setProcessKey(_processKey);
+    }
+
+    function _setProcessKey(bytes32 _processKey) internal {
+        if (_processKey == bytes32(0)) {
+            revert InvalidProcessKey(_processKey);
+        }
+        processKey = _processKey;
+        emit ProcessKeyConfigured(_processKey);
     }
 
     /// @notice Updates the validator address.
@@ -50,5 +71,5 @@ contract HarmonyDelegationVotingPlugin is HarmonyVotingBase {
         emit ValidatorAddressUpdated(oldAddress, _newValidator);
     }
 
-    uint256[48] private __gap; // Reduced from 50 to account for validatorAddress storage
+    uint256[47] private __gap; // Reduced from 50 to account for validatorAddress + processKey storage
 }

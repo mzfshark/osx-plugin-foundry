@@ -21,6 +21,7 @@
 | Document                                             | Description                                                                      |
 | ---------------------------------------------------- | -------------------------------------------------------------------------------- |
 | [HARMONY_API_REFERENCE.md](HARMONY_API_REFERENCE.md) | Harmony Node API (api.hmny.io) — RPC methods for validators, delegators, staking |
+| [EXECUTION_PLAN_REDHAT.md](EXECUTION_PLAN_REDHAT.md) | Detailed execution plan for RedHat Dev agent with commands and validation matrix |
 
 ### Frontend Plan (aragon-app)
 

@@ -146,3 +146,7 @@ Set `DEPLOYMENT_SCRIPT` in `Makefile` to choose deployment strategy:
 - **Storage layout**: `make storage-info` shows storage layout for upgradeable contracts (critical for UUPS upgrades).
 - **Refund**: `make refund` refunds remaining balance from deployment account (useful for testnet cleanup).
 - **LLM workflows**: Use `llm.mk` recipes for AI-assisted test generation; see `make test-tree-prompt` and `make test-prompt`.
+
+## wsl Notes
+- do not use wsl paths in any configuration or script.
+- never try to run commands wsl terminal that interact with codacy cli.

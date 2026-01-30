@@ -20,13 +20,13 @@ contract HarmonyDelegationVotingSetup is PluginSetup {
         address _dao,
         bytes memory _installationParams
     ) external returns (address plugin, PreparedSetupData memory preparedSetupData) {
-        // Decode validator address from installation params
-        address validatorAddress = abi.decode(_installationParams, (address));
+        // Decode (validatorAddress, processKey) from the installation parameters
+        (address validatorAddress, bytes32 processKey) = abi.decode(_installationParams, (address, bytes32));
         require(validatorAddress != address(0), "INVALID_VALIDATOR_ADDRESS");
 
         plugin = ProxyLib.deployUUPSProxy(
             implementation(),
-            abi.encodeCall(HarmonyDelegationVotingPlugin.initialize, (IDAO(_dao), validatorAddress))
+            abi.encodeCall(HarmonyDelegationVotingPlugin.initialize, (IDAO(_dao), validatorAddress, processKey))
         );
 
         PermissionLib.MultiTargetPermission[] memory permissions = new PermissionLib.MultiTargetPermission[](3);

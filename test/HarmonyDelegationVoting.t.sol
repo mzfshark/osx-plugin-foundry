@@ -16,12 +16,15 @@ contract HarmonyDelegationVotingTest is TestBase {
     address oracle;
     address validator;
     address newValidator;
+    bytes32 internal processKey;
 
     function setUp() public {
         daoOwner = alice;
         oracle = bob;
         validator = address(0x1234);
         newValidator = address(0x5678);
+
+        processKey = bytes32("delegation");
 
         DAO daoBase = new DAO();
         HarmonyDelegationVotingPlugin pluginBase = new HarmonyDelegationVotingPlugin();
@@ -38,7 +41,7 @@ contract HarmonyDelegationVotingTest is TestBase {
         plugin = HarmonyDelegationVotingPlugin(
             ProxyLib.deployUUPSProxy(
                 address(pluginBase),
-                abi.encodeCall(HarmonyDelegationVotingPlugin.initialize, (dao, validator))
+                abi.encodeCall(HarmonyDelegationVotingPlugin.initialize, (dao, validator, processKey))
             )
         );
 
@@ -51,6 +54,9 @@ contract HarmonyDelegationVotingTest is TestBase {
         vm.label(address(plugin), "HarmonyDelegationVotingPlugin");
     }
 
+    function testProcessKeyConfiguredOnInit() public {
+        assertEq(plugin.processKey(), processKey);
+    }
     function test_InitialValidatorAddressStored() external {
         assertEq(plugin.validatorAddress(), validator);
     }
