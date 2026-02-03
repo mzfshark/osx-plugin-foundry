@@ -5,7 +5,7 @@
 **Sprint Duration:** 2026-01-28 → 2026-01-31  
 **Priority:** HIGH  
 **Estimative Hours:** 18h  
-**Status:** TODO
+**Status:** IN PROGRESS
 
 ---
 
@@ -52,7 +52,7 @@ forge build
 
 **Key:** `01JK8QXYZ0001`  
 **Estimate:** 4h  
-**Status:** TODO  
+**Status:** IN REVIEW  
 **Assignee:** TBD
 
 #### Description
@@ -77,6 +77,15 @@ Install NativeTokenVoting plugin on a test DAO and document the UNKNOWN name iss
 - [ ] Setup contract event logs analyzed
 - [ ] Root cause hypothesis documented
 
+#### Static Analysis Findings (Code Review)
+
+- UI name resolution uses `daoUtils.getPluginName()` which prefers `plugin.name`, then `plugin.subdomain`, then `plugin.interfaceType` (see aragon-app/src/shared/utils/daoUtils/daoUtils.ts).
+- No explicit "UNKNOWN" string found in frontend; likely "unknown" originates from missing `name`/`subdomain` combined with backend `interfaceType = unknown`.
+- Backend type detection is bytecode-based; if the NativeTokenVoting deployment is missing expected selectors or metadata, it will default to `IPluginInterfaceType.unknown` (see Aragon-app-backend/src/helpers/pluginDetector.ts).
+- Frontend enum includes `nativeTokenVoting`, but backend `PluginDetector` does not emit it (only `tokenVoting`), so naming can fall back inconsistently when subdomain is missing.
+
+**Next evidence needed:** reproduce install to capture tx + plugin record from backend and verify `interfaceType`, `name`, `subdomain` fields.
+
 #### Files to Inspect
 
 ```
@@ -90,7 +99,7 @@ aragon-app/src/shared/constants/networkDefinitions.ts
 
 **Key:** `01JK8QXYZ0002`  
 **Estimate:** 4h  
-**Status:** TODO  
+**Status:** IN REVIEW  
 **Assignee:** TBD
 
 #### Description
@@ -114,6 +123,19 @@ Install DelegationVoting plugin with custom processKey and verify it's ignored.
 - [ ] Mismatch between form value and installed value documented
 - [ ] Code path traced: form → dialog → SDK call → contract
 
+#### Static Analysis Findings (Code Review)
+
+- The frontend installs DelegationVoting via `buildPrepareHarmonyVotingInstallData()`.
+- `buildDelegationInstallData()` supports a `processKey` parameter, but the install flow never passes it; it only passes `validatorAddress`.
+- When `processKey` is undefined, the code defaults to `stringToHex('delegation', { size: 32 })`.
+- The membership form only collects `validatorAddress` (no `processKey` input), so custom values cannot be provided.
+
+**Code refs:**
+- aragon-app/src/plugins/harmonyVotingPlugin/utils/harmonyVotingTransactionUtils.ts
+- aragon-app/src/modules/settings/dialogs/installHarmonyVotingDialog/installHarmonyVotingDialog.tsx (no processKey input)
+
+**Hypothesis:** custom processKey is ignored because the UI does not collect or forward it.
+
 #### Files to Inspect
 
 ```
@@ -127,7 +149,7 @@ osx-plugin-foundry/src/setup/HarmonyDelegationVotingSetup.sol
 
 **Key:** `01JK8QXYZ0003`  
 **Estimate:** 4h  
-**Status:** TODO  
+**Status:** IN REVIEW  
 **Assignee:** TBD
 
 #### Description
@@ -152,6 +174,18 @@ After installing DelegationVoting with validator address, verify that validator,
 - [ ] Subgraph mapping checked for HarmonyDelegation events
 - [ ] Backend API response logged
 
+#### Static Analysis Findings (Code Review)
+
+- The install dialog collects `validatorAddress`, but there is no UI component rendering validator/delegator data after install.
+- The Delegation membership form only validates/stores `validatorAddress`; no `processKey` or delegator data is persisted from UI.
+- Backend persists validator/processKey via `HarmonyVotingConfigHandler` into `ValidatorConfig` and keeps `Plugin.processKey` in sync.
+- No frontend query found that reads `ValidatorConfig` to render validator/delegators.
+
+**Code refs:**
+- aragon-app/src/modules/settings/dialogs/installHarmonyVotingDialog/installHarmonyVotingDialog.tsx
+- Aragon-app-backend/src/handlers/harmonyVotingConfigHandler.ts
+- Aragon-app-backend/src/models/schema/validatorConfig.ts
+
 #### Files to Inspect
 
 ```
@@ -166,7 +200,7 @@ Aragon-app-backend/src/models/**
 
 **Key:** `01JK8QXYZ0004`  
 **Estimate:** 4h  
-**Status:** TODO  
+**Status:** IN REVIEW  
 **Assignee:** TBD
 
 #### Description
@@ -193,6 +227,18 @@ Create and execute a proposal on DelegationVoting plugin and verify it doesn't a
 - [ ] Backend API response documented
 - [ ] Gap identified: where is the data lost?
 
+#### Static Analysis Findings (Code Review)
+
+- Backend `PluginDetector` reports Harmony Voting as `IPluginInterfaceType.harmonyVoting` (single type).
+- Frontend registry only registers `HARMONY_HIP_VOTING` and `HARMONY_DELEGATION_VOTING` plugin IDs; no registry entry for `harmonyVoting`.
+- If backend returns `interfaceType = harmonyVoting`, frontend proposal UI slots will not resolve, which can hide proposal creation/list views.
+
+**Code refs:**
+- Aragon-app-backend/src/helpers/pluginDetector.ts
+- aragon-app/src/plugins/harmonyVotingPlugin/index.ts
+
+**Hypothesis:** interface type mismatch prevents proposal list components from rendering for Harmony Voting installs.
+
 #### Files to Inspect
 
 ```
@@ -208,7 +254,7 @@ aragon-app/src/modules/**/proposals**
 
 **Key:** `01JK8QXYZ0005`  
 **Estimate:** 2h  
-**Status:** TODO  
+**Status:** IN REVIEW  
 **Assignee:** TBD
 
 #### Description
@@ -231,6 +277,16 @@ Document the current HIPVoting allowlist permission flow and identify gaps in UX
 - [ ] Admin runbook checked for allowlist instructions
 - [ ] Gap analysis: what's missing for smooth UX
 - [ ] Recommendations written
+
+#### Static Analysis Findings (Code Review)
+
+- `HIPPluginAllowlist` restricts allowlist management to holders of `MANAGE_ALLOWLIST_PERMISSION_ID` on the Management DAO.
+- Frontend marks HIP plugin as `requiresAllowlist: true`, but no explicit allowlist management UI was found in the Harmony voting components.
+
+**Code refs:**
+- osx-plugin-foundry/src/harmony/HIPPluginAllowlist.sol
+
+**Hypothesis:** UX gap is due to missing admin UI + runbook steps for Management DAO operations.
 
 #### Files to Inspect
 
