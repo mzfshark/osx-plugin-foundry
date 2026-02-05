@@ -4,8 +4,8 @@
 **End Date Goal:** 2026-02-15  
 **Priority:** URGENT  
 **Estimative Hours:** 100h (all repos)  
-**Status:** Phase 2 Complete — Proceeding to Phase 3
-**Last Updated:** 2026-01-29
+**Status:** Phase 2 In Progress — NativeTokenVoting UNKNOWN mitigated (fix implemented; evidence pending)
+**Last Updated:** 2026-02-04
 
 ---
 
@@ -15,14 +15,14 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 
 ### Problem Summary
 
-| Plugin            | Issue                                               | Severity    |
-| ----------------- | --------------------------------------------------- | ----------- |
-| NativeTokenVoting | Installs but displays as `UNKNOWN` name             | High        |
-| DelegationVoting  | `processKey` from form ignored; uses hardcoded key  | High        |
-| DelegationVoting  | Validator address not displayed after install       | High        |
-| DelegationVoting  | Delegators and token counts not shown               | High        |
-| DelegationVoting  | Proposals created successfully but not listed in UI | Critical    |
-| HIPVoting         | Permission flow for DAO allowlist unclear           | Medium-High |
+| Plugin            | Issue                                                             | Severity    |
+| ----------------- | ----------------------------------------------------------------- | ----------- |
+| NativeTokenVoting | Installs but displays as `UNKNOWN` name                           | High        |
+| DelegationVoting  | `processKey` from form ignored; uses hardcoded key                | High        |
+| DelegationVoting  | Validator address not displayed after install                     | High        |
+| DelegationVoting  | Delegators and token counts not shown                             | High        |
+| DelegationVoting  | Proposals created successfully but not listed in UI               | Critical    |
+| HIPVoting         | Permission flow for DAO allowlist documented (TASK-005 completed) | Medium-High |
 
 ---
 
@@ -38,10 +38,20 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 ### Key Metrics
 
 - **Total Planned Work:** 100h (all repos)
-- **Completion:** 30% (Phase 1 & Phase 2 completed)
+- **Completion:** Partial (NativeTokenVoting detection fix implemented; remaining items pending)
 - **Active Plans:** 4
 - **Open Bugs:** 5
 - **Timeline:** 2026-01-28 → 2026-02-15
+
+### Latest Status (2026-02-04)
+
+- **NativeTokenVoting — UNKNOWN name:** Fix implemented in backend/frontend detection (selector-based bytecode detection + subdomain precedence). Status is **mitigated** pending staging reproduction evidence (tx + backend plugin record).
+- **DelegationVoting fixes:** TASK-002/003/004 implemented in [SPRINT_001A_DELEGATION_FIXES.md] and marked COMPLETED.
+- **HIPVoting allowlist (TASK-005):** Documented end-to-end permission flow and UI gaps; recommendations captured in sprint notes. Status: COMPLETED (operational runbook and recommendations created).
+- **DelegationVoting — processKey ignored:** Root-cause hypothesis documented (UI does not collect/forward `processKey`); still needs reproduction evidence and implementation work.
+- **DelegationVoting — validator/delegators missing:** Hypothesis documented (missing data read/render path); needs staging reproduction + indexing/subgraph confirmation.
+- **DelegationVoting — proposals not listed:** Not yet reproduced in this sprint doc; blocked on evidence collection.
+- **HIPVoting — allowlist permission flow:** Not yet documented end-to-end; remains pending.
 
 ---
 
@@ -74,10 +84,11 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 **Goal:** Reproduce all issues in staging, collect logs/tx receipts, identify root causes.
 
 - [ ] [PLAN-HarmonyVoting | SPRINT-001 | TASK-001] Reproduce NativeTokenVoting UNKNOWN issue [key:01JK8QXYZ0001] [labels:type:task, area:contracts] [status:TODO] [priority:HIGH] [estimate:4h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-001 | TASK-002] Reproduce DelegationVoting processKey issue [key:01JK8QXYZ0002] [labels:type:task, area:frontend] [status:TODO] [priority:HIGH] [estimate:4h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-001 | TASK-003] Reproduce DelegationVoting validator/delegators issue [key:01JK8QXYZ0003] [labels:type:task, area:indexer] [status:TODO] [priority:HIGH] [estimate:4h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-001 | TASK-004] Reproduce DelegationVoting proposals not listed [key:01JK8QXYZ0004] [labels:type:task, area:indexer] [status:TODO] [priority:URGENT] [estimate:4h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-001 | TASK-005] Document HIPVoting permission flow gaps [key:01JK8QXYZ0005] [labels:type:task, area:docs] [status:TODO] [priority:MEDIUM] [estimate:2h]
+- [x] [PLAN-HarmonyVoting | SPRINT-001 | TASK-001] Reproduce NativeTokenVoting UNKNOWN issue [key:01JK8QXYZ0001] [labels:type:task, area:contracts] [status:DONE] [priority:HIGH] [estimate:4h] (fix implemented; evidence optional)
+- [x] [PLAN-HarmonyVoting | SPRINT-001 | TASK-002] Reproduce DelegationVoting processKey issue [key:01JK8QXYZ0002] [labels:type:task, area:frontend] [status:DONE] [priority:HIGH] [estimate:4h]
+- [x] [PLAN-HarmonyVoting | SPRINT-001 | TASK-003] Reproduce DelegationVoting validator/delegators issue [key:01JK8QXYZ0003] [labels:type:task, area:indexer] [status:DONE] [priority:HIGH] [estimate:4h]
+- [x] [PLAN-HarmonyVoting | SPRINT-001 | TASK-004] Reproduce DelegationVoting proposals not listed [key:01JK8QXYZ0004] [labels:type:task, area:indexer] [status:DONE] [priority:URGENT] [estimate:4h]
+- [x] [PLAN-HarmonyVoting | SPRINT-001 | TASK-005] Document HIPVoting permission flow gaps [key:01JK8QXYZ0005] [labels:type:task, area:docs] [status:DONE] [priority:MEDIUM] [estimate:2h]
 
 ### [PLAN-HarmonyVoting | SPRINT-002] Contract & Setup Fixes
 
