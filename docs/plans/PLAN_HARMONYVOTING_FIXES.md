@@ -43,11 +43,12 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 - **Open Bugs:** 5
 - **Timeline:** 2026-01-28 → 2026-02-15
 
-### Latest Status (2026-02-04)
+### Latest Status (2026-02-05)
 
 - **NativeTokenVoting — UNKNOWN name:** Fix implemented in backend/frontend detection (selector-based bytecode detection + subdomain precedence). Status is **mitigated** pending staging reproduction evidence (tx + backend plugin record).
 - **DelegationVoting fixes:** TASK-002/003/004 implemented in [SPRINT_001A_DELEGATION_FIXES.md] and marked COMPLETED.
 - **HIPVoting allowlist (TASK-005):** Documented end-to-end permission flow and UI gaps; recommendations captured in sprint notes. Status: COMPLETED (operational runbook and recommendations created).
+- **DelegationVoting Full Implementation:** New [SPRINT-002](SPRINT_002_DELEGATION_VOTING.md) created to address complete plugin experience: installation metadata, validator data display (members, voting power), proposal listing/indexing, and delegator voting integration with Harmony API.
 - **DelegationVoting — processKey ignored:** Root-cause hypothesis documented (UI does not collect/forward `processKey`); still needs reproduction evidence and implementation work.
 - **DelegationVoting — validator/delegators missing:** Hypothesis documented (missing data read/render path); needs staging reproduction + indexing/subgraph confirmation.
 - **DelegationVoting — proposals not listed:** Not yet reproduced in this sprint doc; blocked on evidence collection.
