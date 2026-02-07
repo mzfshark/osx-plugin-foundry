@@ -166,7 +166,7 @@ aragon-app/src/plugins/harmonyVotingPlugin/utils/harmonyVotingTransactionUtils.t
 
 **Key:** `01JK9DV00002`  
 **Estimate:** 5h  
-**Status:** TODO  
+**Status:** DONE  
 **Area:** Backend (Aragon-app-backend)  
 **Priority:** HIGH
 
@@ -287,11 +287,11 @@ Aragon-app-backend/src/services/index.ts (export)
 
 #### Acceptance Criteria
 
-- [ ] Service fetches validator info correctly
-- [ ] Service fetches delegations list correctly
-- [ ] Address conversion works (hex ↔ bech32)
-- [ ] Caching prevents excessive RPC calls
-- [ ] Unit tests cover happy path and error cases
+- [x] Service fetches validator info correctly
+- [x] Service fetches delegations list correctly
+- [x] Address conversion works (hex ↔ bech32)
+- [x] Caching prevents excessive RPC calls
+- [x] Unit tests cover happy path and error cases
 
 ---
 
@@ -299,7 +299,7 @@ Aragon-app-backend/src/services/index.ts (export)
 
 **Key:** `01JK9DV00003`  
 **Estimate:** 4h  
-**Status:** TODO  
+**Status:** DONE  
 **Area:** Backend (Aragon-app-backend)  
 **Priority:** HIGH
 
@@ -355,11 +355,11 @@ Aragon-app-backend/src/routes/v2/plugins.ts
 
 #### Acceptance Criteria
 
-- [ ] Endpoint returns validator info with members list
-- [ ] Voting power calculated from staked amount
-- [ ] Response includes both hex and bech32 addresses
-- [ ] Pagination supported for large member lists
-- [ ] Error handling for invalid validator/network
+- [x] Endpoint returns validator info with members list
+- [x] Voting power calculated from staked amount
+- [x] Response includes both hex and bech32 addresses
+- [x] Pagination supported for large member lists
+- [x] Error handling for invalid validator/network
 
 ---
 
@@ -490,7 +490,7 @@ aragon-app/src/plugins/harmonyVotingPlugin/harmonyVotingPlugin.registry.ts
 
 **Key:** `01JK9DV00006`  
 **Estimate:** 6h  
-**Status:** TODO  
+**Status:** IN PROGRESS  
 **Area:** Frontend + Backend  
 **Priority:** HIGH
 
@@ -500,7 +500,7 @@ Integrate delegator voting power (staked amount) into the voting flow.
 
 #### Implementation Steps
 
-1. **Backend: Create voting power endpoint**
+1. **Backend: Create voting power endpoint** (DONE)
 
 ```typescript
 // GET /v2/plugins/delegation-voting/:network/:pluginAddress/voting-power/:voterAddress
