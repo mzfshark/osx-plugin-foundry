@@ -33,7 +33,7 @@ contract HarmonyVotingTest is TestBase {
         vm.deal(carol, 0.99 ether);
         vm.prank(carol);
         vm.expectRevert("INSUFFICIENT_PROPOSER_BALANCE");
-        plugin.createProposal(bytes32("m"), uint64(block.timestamp), uint64(block.timestamp + 100), uint64(10));
+        plugin.createProposal(bytes("m"), uint64(block.timestamp), uint64(block.timestamp + 100), uint64(10));
     }
 
     function test_Flow_CastThenSnapshotThenSubmitPowerThenClose() external {
@@ -42,7 +42,7 @@ contract HarmonyVotingTest is TestBase {
         uint64 snapshotBlock = uint64(block.number + 10);
 
         vm.prank(proposer);
-        uint256 proposalId = plugin.createProposal(bytes32("hip"), startDate, endDate, snapshotBlock);
+        uint256 proposalId = plugin.createProposal(bytes("ipfs://QmTest"), startDate, endDate, snapshotBlock);
 
         vm.prank(carol);
         plugin.castVote(proposalId, HarmonyVotingBase.VoteOption.Yes);

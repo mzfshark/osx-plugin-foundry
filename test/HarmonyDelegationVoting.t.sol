@@ -108,7 +108,7 @@ contract HarmonyDelegationVotingTest is TestBase {
         vm.deal(david, 1 ether);
 
         vm.prank(carol);
-        uint256 proposalId = plugin.createProposal(bytes32("delegation"), startDate, endDate, snapshotBlock);
+        uint256 proposalId = plugin.createProposal(bytes("ipfs://QmTestDelegation"), startDate, endDate, snapshotBlock);
 
         vm.prank(carol);
         plugin.castVote(proposalId, HarmonyVotingBase.VoteOption.Yes);

@@ -117,7 +117,7 @@ curl -X POST https://api.harmony.one -H "Content-Type: application/json" -d '{
 
 **Key:** `01JK9DV00001`  
 **Estimate:** 6h  
-**Status:** IN-PROGRESS  
+**Status:** DONE  
 **Area:** Frontend (aragon-app)  
 **Priority:** HIGH
 
@@ -157,7 +157,7 @@ aragon-app/src/plugins/harmonyVotingPlugin/utils/harmonyVotingTransactionUtils.t
 
 - [x] Custom `processKey` from UI is encoded in install tx
 - [x] `validatorAddress` is validated before submission
-- [ ] Contract stores correct values (verified via setup/install read)
+- [x] Contract stores correct values (verified via setup/install read)
 - [x] Unit tests cover custom processKey scenarios
 
 ---

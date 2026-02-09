@@ -4,8 +4,8 @@
 **End Date Goal:** 2026-02-15  
 **Priority:** URGENT  
 **Estimative Hours:** 100h (all repos)  
-**Status:** Phase 2 In Progress — NativeTokenVoting UNKNOWN mitigated (fix implemented; evidence pending)
-**Last Updated:** 2026-02-04
+**Status:** Phase 2 In Progress — DelegationVoting UX + install metadata mitigated; proposals listing/indexing still critical
+**Last Updated:** 2026-02-09
 
 ---
 
@@ -46,11 +46,12 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 ### Latest Status (2026-02-05)
 
 - **NativeTokenVoting — UNKNOWN name:** Fix implemented in backend/frontend detection (selector-based bytecode detection + subdomain precedence). Status is **mitigated** pending staging reproduction evidence (tx + backend plugin record).
-- **DelegationVoting fixes:** TASK-002/003/004 implemented in [SPRINT_001A_DELEGATION_FIXES.md] and marked COMPLETED.
+- **DelegationVoting — install metadata:** `processKey` is collected/validated in frontend, encoded as `bytes32`, and persists on-chain via setup installation (verified by Foundry test).
+- **DelegationVoting — validator/delegators UI:** Governance Members list shows delegator voting power and member detail shows validator panel (frontend slots implemented).
 - **HIPVoting allowlist (TASK-005):** Documented end-to-end permission flow and UI gaps; recommendations captured in sprint notes. Status: COMPLETED (operational runbook and recommendations created).
 - **DelegationVoting Full Implementation:** New [SPRINT-002](SPRINT_002_DELEGATION_VOTING.md) created to address complete plugin experience: installation metadata, validator data display (members, voting power), proposal listing/indexing, and delegator voting integration with Harmony API.
-- **DelegationVoting — processKey ignored:** Root-cause hypothesis documented (UI does not collect/forward `processKey`); still needs reproduction evidence and implementation work.
-- **DelegationVoting — validator/delegators missing:** Hypothesis documented (missing data read/render path); needs staging reproduction + indexing/subgraph confirmation.
+- **DelegationVoting — processKey ignored:** Resolved (frontend propagation + on-chain persistence verified).
+- **DelegationVoting — validator/delegators missing:** Resolved for the Members + Member detail surfaces (proposal listing remains pending).
 - **DelegationVoting — proposals not listed:** Not yet reproduced in this sprint doc; blocked on evidence collection.
 - **HIPVoting — allowlist permission flow:** Not yet documented end-to-end; remains pending.
 
@@ -88,7 +89,6 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 
 **Goal:** Reproduce all issues in staging, collect logs/tx receipts, identify root causes.
 
-- [ ] [PLAN-HarmonyVoting | SPRINT-001 | TASK-001] Reproduce NativeTokenVoting UNKNOWN issue [key:01JK8QXYZ0001] [labels:type:task, area:contracts] [status:TODO] [priority:HIGH] [estimate:4h]
 - [x] [PLAN-HarmonyVoting | SPRINT-001 | TASK-001] Reproduce NativeTokenVoting UNKNOWN issue [key:01JK8QXYZ0001] [labels:type:task, area:contracts] [status:DONE] [priority:HIGH] [estimate:4h] (fix implemented; evidence optional)
 - [x] [PLAN-HarmonyVoting | SPRINT-001 | TASK-002] Reproduce DelegationVoting processKey issue [key:01JK8QXYZ0002] [labels:type:task, area:frontend] [status:DONE] [priority:HIGH] [estimate:4h]
 - [x] [PLAN-HarmonyVoting | SPRINT-001 | TASK-003] Reproduce DelegationVoting validator/delegators issue [key:01JK8QXYZ0003] [labels:type:task, area:indexer] [status:DONE] [priority:HIGH] [estimate:4h]
@@ -100,7 +100,7 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 **Goal:** Fix Setup contracts to emit correct metadata, persist processKey, and emit validator events.
 
 - [ ] [PLAN-HarmonyVoting | SPRINT-002 | BUG-001] Fix NativeTokenVoting metadata/name emission [key:01JK8QXYZ0006] [labels:type:bug, area:contracts] [status:TODO] [priority:HIGH] [estimate:8h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-002 | BUG-002] Fix DelegationVoting processKey persistence [key:01JK8QXYZ0007] [labels:type:bug, area:contracts] [status:TODO] [priority:HIGH] [estimate:8h]
+- [x] [PLAN-HarmonyVoting | SPRINT-002 | BUG-002] Fix DelegationVoting processKey persistence [key:01JK8QXYZ0007] [labels:type:bug, area:contracts] [status:DONE] [priority:HIGH] [estimate:8h] (verified via Foundry setup/install test)
 - [ ] [PLAN-HarmonyVoting | SPRINT-002 | BUG-003] Fix DelegationVoting validator event emission [key:01JK8QXYZ0008] [labels:type:bug, area:contracts] [status:TODO] [priority:HIGH] [estimate:6h]
 - [ ] [PLAN-HarmonyVoting | SPRINT-002 | FEATURE-001] Implement HIPVoting allowlist UX flow [key:01JK8QXYZ0009] [labels:type:feature, area:contracts] [status:TODO] [priority:MEDIUM] [estimate:12h]
 - [ ] [PLAN-HarmonyVoting | SPRINT-002 | TASK-001] Re-verify Setup contracts on Blockscout/Sourcify [key:01JK8QXYZ0010] [labels:type:task, area:devops] [status:TODO] [priority:MEDIUM] [estimate:4h]
@@ -109,7 +109,7 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 
 **Goal:** Update frontend mappings, fix form submission, add subgraph handlers, reindex data.
 
-- [ ] [PLAN-HarmonyVoting | SPRINT-003 | BUG-001] Fix frontend processKey form submission [key:01JK8QXYZ0011] [labels:type:bug, area:frontend] [status:TODO] [priority:HIGH] [estimate:6h]
+- [x] [PLAN-HarmonyVoting | SPRINT-003 | BUG-001] Fix frontend processKey form submission [key:01JK8QXYZ0011] [labels:type:bug, area:frontend] [status:DONE] [priority:HIGH] [estimate:6h]
 - [ ] [PLAN-HarmonyVoting | SPRINT-003 | BUG-002] Fix proposal indexing for DelegationVoting [key:01JK8QXYZ0012] [labels:type:bug, area:indexer] [status:TODO] [priority:URGENT] [estimate:8h]
 - [ ] [PLAN-HarmonyVoting | SPRINT-003 | TASK-001] Update networkDefinitions with correct addresses [key:01JK8QXYZ0013] [labels:type:task, area:frontend] [status:TODO] [priority:HIGH] [estimate:2h]
 - [ ] [PLAN-HarmonyVoting | SPRINT-003 | TASK-002] Add subgraph mappings for HarmonyVoting events [key:01JK8QXYZ0014] [labels:type:task, area:subgraph] [status:TODO] [priority:HIGH] [estimate:8h]
@@ -187,8 +187,8 @@ AragonOSX/packages/subgraph/src/**
 
 - [ ] All three plugins install without errors
 - [ ] NativeTokenVoting displays correct name (not UNKNOWN)
-- [ ] DelegationVoting respects user-provided `processKey`
-- [ ] DelegationVoting shows validator address, delegators, token counts
+- [x] DelegationVoting respects user-provided `processKey`
+- [x] DelegationVoting shows validator address, delegators, token counts (via voting power display)
 - [ ] DelegationVoting proposals are listed and accessible in UI
 - [ ] HIPVoting has documented permission request flow
 - [ ] All Setup contracts verified on block explorers

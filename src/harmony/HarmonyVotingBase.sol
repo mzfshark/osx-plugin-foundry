@@ -15,7 +15,7 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
     }
 
     struct ProposalData {
-        bytes32 metadata;
+        bytes metadata;
         uint64 startDate;
         uint64 endDate;
         uint64 snapshotBlock;
@@ -44,7 +44,7 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
 
     event ProposalCreated(
         uint256 indexed proposalId,
-        bytes32 indexed metadata,
+        bytes metadata,
         uint64 startDate,
         uint64 endDate,
         uint64 snapshotBlock
@@ -59,7 +59,7 @@ abstract contract HarmonyVotingBase is PluginUUPSUpgradeable {
     }
 
     function createProposal(
-        bytes32 _metadata,
+        bytes calldata _metadata,
         uint64 _startDate,
         uint64 _endDate,
         uint64 _snapshotBlock
