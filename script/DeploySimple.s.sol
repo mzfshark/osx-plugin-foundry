@@ -7,6 +7,8 @@ import {stdJson} from "forge-std/StdJson.sol";
 import {PluginRepoFactory} from "@aragon/osx/framework/plugin/repo/PluginRepoFactory.sol";
 import {PluginRepo} from "@aragon/osx/framework/plugin/repo/PluginRepo.sol";
 import {hashHelpers, PluginSetupRef} from "@aragon/osx/framework/plugin/setup/PluginSetupProcessorHelpers.sol";
+import {PermissionLib} from "@aragon/osx-commons-contracts/src/permission/PermissionLib.sol";
+import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/ProxyLib.sol";
 import {MyPluginSetup} from "../src/setup/MyPluginSetup.sol";
 
 /**
@@ -21,6 +23,7 @@ contract DeploySimpleScript is Script {
     PluginRepoFactory pluginRepoFactory;
     string pluginEnsSubdomain;
     address pluginRepoMaintainerAddress;
+    bool skipEnsRegistry;
 
     // Artifacts
     PluginRepo myPluginRepo;
@@ -59,6 +62,9 @@ contract DeploySimpleScript is Script {
 
         pluginRepoMaintainerAddress = vm.envAddress("PLUGIN_REPO_MAINTAINER_ADDRESS");
         vm.label(pluginRepoMaintainerAddress, "Maintainer");
+
+        // Optionally skip ENS registry flow (useful for networks without ENS like Harmony)
+        skipEnsRegistry = vm.envOr("SKIP_ENS_REGISTRY", false);
     }
 
     function run() public broadcast {
@@ -79,12 +85,71 @@ contract DeploySimpleScript is Script {
         myPluginSetup = new MyPluginSetup();
 
         // The new plugin repository
-        // Publish the plugin in a new repo as release 1, build 1
-        myPluginRepo = pluginRepoFactory.createPluginRepoWithFirstVersion(
-            pluginEnsSubdomain, address(myPluginSetup), pluginRepoMaintainerAddress, " ", " "
-        );
+        // Try the normal factory path first; if it reverts (e.g. ENS not supported on this network),
+        // fall back to a Harmony-safe direct repo deployment and publish the version manually.
+        try pluginRepoFactory.createPluginRepoWithFirstVersion(
+            pluginEnsSubdomain,
+            address(myPluginSetup),
+            pluginRepoMaintainerAddress,
+            " ",
+            " "
+        ) returns (PluginRepo repo) {
+            myPluginRepo = repo;
+        } catch {
+            // If configured to skip ENS registry, use the direct deploy path.
+            if (skipEnsRegistry) {
+                myPluginRepo = _deployRepoDirect();
+                return;
+            }
+
+            // The new plugin repository
+            // Try the normal factory path first; if it reverts (e.g. ENS not supported on this network),
+            // fall back to a Harmony-safe direct repo deployment and publish the version manually.
+            try pluginRepoFactory.createPluginRepoWithFirstVersion(
+                pluginEnsSubdomain,
+                address(myPluginSetup),
+                pluginRepoMaintainerAddress,
+                " ",
+                " "
+            ) returns (PluginRepo repo) {
+                myPluginRepo = repo;
+            } catch {
+                myPluginRepo = _deployRepoDirect();
+            }
+        }
     }
 
+    /// @dev Direct deploy path: deploys PluginRepo proxy and publishes version without using registry.
+    function _deployRepoDirect() internal returns (PluginRepo) {
+        address pluginRepoBase = pluginRepoFactory.pluginRepoBase();
+        PluginRepo pluginRepoInstance = PluginRepo(
+            ProxyLib.deployUUPSProxy(pluginRepoBase, abi.encodeCall(PluginRepo.initialize, (deployer)))
+        );
+
+        // Publish first version 1
+        pluginRepoInstance.createVersion(1, address(myPluginSetup), " ", " ");
+
+        // If maintainer differs from deployer, replicate factory's final permissions.
+        if (pluginRepoMaintainerAddress != deployer) {
+            PermissionLib.SingleTargetPermission[] memory items = new PermissionLib.SingleTargetPermission[](6);
+
+            bytes32 rootPermissionID = pluginRepoInstance.ROOT_PERMISSION_ID();
+            bytes32 maintainerPermissionID = pluginRepoInstance.MAINTAINER_PERMISSION_ID();
+            bytes32 upgradePermissionID = pluginRepoInstance.UPGRADE_REPO_PERMISSION_ID();
+
+            items[0] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Grant, pluginRepoMaintainerAddress, maintainerPermissionID);
+            items[1] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Grant, pluginRepoMaintainerAddress, upgradePermissionID);
+            items[2] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Grant, pluginRepoMaintainerAddress, rootPermissionID);
+
+            items[3] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Revoke, deployer, rootPermissionID);
+            items[4] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Revoke, deployer, maintainerPermissionID);
+            items[5] = PermissionLib.SingleTargetPermission(PermissionLib.Operation.Revoke, deployer, upgradePermissionID);
+
+            pluginRepoInstance.applySingleTargetPermissions(address(pluginRepoInstance), items);
+        }
+
+        return pluginRepoInstance;
+    }
     function printDeployment() public view {
         console2.log("MyUpgradeablePlugin:");
         console2.log("- Plugin repo:               ", address(myPluginRepo));
