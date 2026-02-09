@@ -42,6 +42,10 @@ make init
 
 Edit `.env` to match your desired network and settings.
 
+### Harmony note
+
+Harmony RPC endpoints commonly do not support EIP-1559 methods like `eth_feeHistory`. For deployments on Harmony (`CHAIN_ID=1666600000`), you must use legacy transactions (`--legacy`). The provided `Makefile` automatically adds `--legacy` for Harmony when you run `make deploy` or `make resume`.
+
 ### Installing dependencies
 
 ```sh

@@ -75,6 +75,9 @@ endif
 # Additional chain-dependent params (Foundry)
 ifeq ($(CHAIN_ID),88888)
 	FORGE_SCRIPT_CUSTOM_PARAMS := --priority-gas-price 1000000000 --gas-price 5200000000000
+else ifeq ($(CHAIN_ID),1666600000)
+	# Harmony RPC commonly does not support EIP-1559 fee history; force legacy txs.
+	FORGE_SCRIPT_CUSTOM_PARAMS := --legacy
 else ifeq ($(CHAIN_ID),300)
 	FORGE_SCRIPT_CUSTOM_PARAMS := --slow
 	FORGE_BUILD_CUSTOM_PARAMS := --zksync

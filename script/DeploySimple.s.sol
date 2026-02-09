@@ -52,19 +52,20 @@ contract DeploySimpleScript is Script {
         pluginRepoFactory = PluginRepoFactory(vm.envAddress("PLUGIN_REPO_FACTORY_ADDRESS"));
         vm.label(address(pluginRepoFactory), "PluginRepoFactory");
 
-        // Read the rest of environment variables
-        pluginEnsSubdomain = vm.envOr("PLUGIN_ENS_SUBDOMAIN", string(""));
-
-        // Using a random subdomain if empty
-        if (bytes(pluginEnsSubdomain).length == 0) {
-            pluginEnsSubdomain = string.concat("my-test-plugin-", vm.toString(block.timestamp));
-        }
-
         pluginRepoMaintainerAddress = vm.envAddress("PLUGIN_REPO_MAINTAINER_ADDRESS");
         vm.label(pluginRepoMaintainerAddress, "Maintainer");
 
-        // Optionally skip ENS registry flow (useful for networks without ENS like Harmony)
-        skipEnsRegistry = vm.envOr("SKIP_ENS_REGISTRY", false);
+        // Optionally skip ENS registry flow (useful for networks without ENS like Harmony).
+        // Default-skip on Harmony where ENS registrar is not available.
+        skipEnsRegistry = vm.envOr("SKIP_ENS_REGISTRY", false) || block.chainid == 1666600000;
+
+        // Read the rest of environment variables
+        pluginEnsSubdomain = vm.envOr("PLUGIN_ENS_SUBDOMAIN", string(""));
+
+        // Only compute a random subdomain when using the registry path.
+        if (!skipEnsRegistry && bytes(pluginEnsSubdomain).length == 0) {
+            pluginEnsSubdomain = string.concat("my-test-plugin-", vm.toString(block.timestamp));
+        }
     }
 
     function run() public broadcast {
@@ -84,9 +85,14 @@ contract DeploySimpleScript is Script {
         // Plugin setup (the installer)
         myPluginSetup = new MyPluginSetup();
 
-        // The new plugin repository
-        // Try the normal factory path first; if it reverts (e.g. ENS not supported on this network),
-        // fall back to a Harmony-safe direct repo deployment and publish the version manually.
+        // On networks without ENS (Harmony) we must never touch the registry path.
+        if (skipEnsRegistry) {
+            myPluginRepo = _deployRepoDirect();
+            return;
+        }
+
+        // The normal OSx path: creates repo and registers ENS via the registry.
+        // If it reverts (e.g. ENS not supported), fall back to a direct repo deployment.
         try pluginRepoFactory.createPluginRepoWithFirstVersion(
             pluginEnsSubdomain,
             address(myPluginSetup),
@@ -96,26 +102,7 @@ contract DeploySimpleScript is Script {
         ) returns (PluginRepo repo) {
             myPluginRepo = repo;
         } catch {
-            // If configured to skip ENS registry, use the direct deploy path.
-            if (skipEnsRegistry) {
-                myPluginRepo = _deployRepoDirect();
-                return;
-            }
-
-            // The new plugin repository
-            // Try the normal factory path first; if it reverts (e.g. ENS not supported on this network),
-            // fall back to a Harmony-safe direct repo deployment and publish the version manually.
-            try pluginRepoFactory.createPluginRepoWithFirstVersion(
-                pluginEnsSubdomain,
-                address(myPluginSetup),
-                pluginRepoMaintainerAddress,
-                " ",
-                " "
-            ) returns (PluginRepo repo) {
-                myPluginRepo = repo;
-            } catch {
-                myPluginRepo = _deployRepoDirect();
-            }
+            myPluginRepo = _deployRepoDirect();
         }
     }
 
@@ -154,7 +141,11 @@ contract DeploySimpleScript is Script {
         console2.log("MyUpgradeablePlugin:");
         console2.log("- Plugin repo:               ", address(myPluginRepo));
         console2.log("- Plugin repo maintainer:    ", pluginRepoMaintainerAddress);
-        console2.log("- ENS:                       ", string.concat(pluginEnsSubdomain, ".plugin.dao.eth"));
+        if (skipEnsRegistry) {
+            console2.log("- ENS:                        (skipped)");
+        } else {
+            console2.log("- ENS:                       ", string.concat(pluginEnsSubdomain, ".plugin.dao.eth"));
+        }
         console2.log("");
     }
 
@@ -162,7 +153,11 @@ contract DeploySimpleScript is Script {
         string memory artifacts = "output";
         artifacts.serialize("pluginRepo", address(myPluginRepo));
         artifacts.serialize("pluginRepoMaintainer", pluginRepoMaintainerAddress);
-        artifacts = artifacts.serialize("pluginEnsDomain", string.concat(pluginEnsSubdomain, ".plugin.dao.eth"));
+        if (skipEnsRegistry) {
+            artifacts = artifacts.serialize("pluginEnsDomain", string(""));
+        } else {
+            artifacts = artifacts.serialize("pluginEnsDomain", string.concat(pluginEnsSubdomain, ".plugin.dao.eth"));
+        }
 
         string memory networkName = vm.envString("NETWORK_NAME");
         string memory filePath = string.concat(
