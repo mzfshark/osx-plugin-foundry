@@ -76,6 +76,10 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 
 **Note:** Frontend integration (SPRINT-003) moved to [aragon-app plan](../../../aragon-app/docs/plans/PLAN_HARMONYVOTING_FRONTEND.md).
 
+### Related EPICs
+
+- [EPIC-VoteDelegation](EPIC_VOTEDELEGATION.md) — Vote Delegation & Multi-Validator for HarmonyVoting Suite (validator feedback Feb 2026)
+
 ---
 
 ## Sprints (Linked)
