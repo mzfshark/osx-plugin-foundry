@@ -117,7 +117,7 @@ curl -X POST https://api.harmony.one -H "Content-Type: application/json" -d '{
 
 **Key:** `01JK9DV00001`  
 **Estimate:** 6h  
-**Status:** TODO  
+**Status:** IN-PROGRESS  
 **Area:** Frontend (aragon-app)  
 **Priority:** HIGH
 
@@ -155,10 +155,10 @@ aragon-app/src/plugins/harmonyVotingPlugin/utils/harmonyVotingTransactionUtils.t
 
 #### Acceptance Criteria
 
-- [ ] Custom `processKey` from UI is encoded in install tx
-- [ ] `validatorAddress` is validated before submission
-- [ ] Contract stores correct values (verified via read)
-- [ ] Unit tests cover custom processKey scenarios
+- [x] Custom `processKey` from UI is encoded in install tx
+- [x] `validatorAddress` is validated before submission
+- [ ] Contract stores correct values (verified via setup/install read)
+- [x] Unit tests cover custom processKey scenarios
 
 ---
 
@@ -367,17 +367,17 @@ Aragon-app-backend/src/routes/v2/plugins.ts
 
 **Key:** `01JK9DV00004`  
 **Estimate:** 6h  
-**Status:** TODO  
+**Status:** DONE  
 **Area:** Frontend (aragon-app)  
 **Priority:** HIGH
 
 #### Description
 
-Create UI components to display validator data (members, voting power) in the plugin settings/members view.
+Create UI components to display validator data (members, voting power) in the plugin settings/members view and in Governance → Members.
 
 #### Implementation Steps
 
-1. **Create query hook `useValidatorData()`**
+1. **Reuse existing plugins service queries**
 
 ```typescript
 // src/plugins/harmonyVotingPlugin/hooks/useValidatorData.ts
@@ -390,7 +390,7 @@ export const useValidatorData = (network: Network, pluginAddress: Address) => {
 };
 ```
 
-2. **Create `DelegationVotingMembersView` component**
+2. **Validator + delegators view (Settings → Members info)**
 
 ```tsx
 // Display:
@@ -402,7 +402,7 @@ export const useValidatorData = (network: Network, pluginAddress: Address) => {
 // - Active/Committee status badges
 ```
 
-3. **Register in plugin slots**
+3. **Register in plugin slots (Settings + Governance)**
 
 ```typescript
 // SETTINGS_MEMBERS_INFO slot for HARMONY_DELEGATION_VOTING
@@ -420,20 +420,21 @@ export function formatONE(weiAmount: bigint): string {
 #### Files to Create/Modify
 
 ```
-aragon-app/src/plugins/harmonyVotingPlugin/hooks/useValidatorData.ts (NEW)
-aragon-app/src/plugins/harmonyVotingPlugin/components/delegationVotingMembersView.tsx (NEW)
-aragon-app/src/plugins/harmonyVotingPlugin/index.ts (register slot)
-aragon-app/src/shared/utils/harmonyFormatUtils.ts (NEW)
+aragon-app/src/plugins/harmonyVotingPlugin/components/harmonyVotingSetupMembership/harmonyDelegationMemberInfoView.tsx
+aragon-app/src/plugins/harmonyVotingPlugin/components/harmonyDelegationMemberList/** (NEW)
+aragon-app/src/plugins/harmonyVotingPlugin/hooks/useHarmonyDelegationMemberStats/** (NEW)
+aragon-app/src/plugins/harmonyVotingPlugin/components/harmonyDelegationMemberPanel/** (NEW)
+aragon-app/src/plugins/harmonyVotingPlugin/index.ts
 ```
 
 #### Acceptance Criteria
 
-- [ ] Validator info displayed (name, address, commission)
-- [ ] Total voting power shown
-- [ ] Members list with individual voting power
-- [ ] Percentage of total calculated per member
-- [ ] Loading and error states handled
-- [ ] Responsive design for mobile
+- [x] Validator info displayed (name, address, commission)
+- [x] Total voting power shown
+- [x] Members list with individual voting power
+- [x] Percentage of total calculated per member
+- [x] Loading and error states handled
+- [x] Responsive design for mobile
 
 ---
 

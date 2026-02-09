@@ -7,10 +7,12 @@ import {DAO} from "@aragon/osx/core/dao/DAO.sol";
 import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/ProxyLib.sol";
 import {HarmonyDelegationVotingPlugin} from "../src/harmony/HarmonyDelegationVotingPlugin.sol";
 import {HarmonyVotingBase} from "../src/harmony/HarmonyVotingBase.sol";
+import {HarmonyDelegationVotingSetup} from "../src/setup/HarmonyDelegationVotingSetup.sol";
 
 contract HarmonyDelegationVotingTest is TestBase {
     DAO dao;
     HarmonyDelegationVotingPlugin plugin;
+    HarmonyDelegationVotingSetup setup;
 
     address daoOwner;
     address oracle;
@@ -28,6 +30,8 @@ contract HarmonyDelegationVotingTest is TestBase {
 
         DAO daoBase = new DAO();
         HarmonyDelegationVotingPlugin pluginBase = new HarmonyDelegationVotingPlugin();
+
+        setup = new HarmonyDelegationVotingSetup(oracle);
 
         dao = DAO(
             payable(
@@ -52,12 +56,24 @@ contract HarmonyDelegationVotingTest is TestBase {
 
         vm.label(address(dao), "DAO");
         vm.label(address(plugin), "HarmonyDelegationVotingPlugin");
+        vm.label(address(setup), "HarmonyDelegationVotingSetup");
     }
 
-    function testProcessKeyConfiguredOnInit() public {
+    function test_SetupPrepareInstallation_StoresValidatorAndProcessKey() public {
+        bytes32 customKey = bytes32("ABCDE");
+        address customValidator = address(0xBEEF);
+
+        (address installed, ) = setup.prepareInstallation(address(dao), abi.encode(customValidator, customKey));
+
+        HarmonyDelegationVotingPlugin installedPlugin = HarmonyDelegationVotingPlugin(installed);
+        assertEq(installedPlugin.validatorAddress(), customValidator);
+        assertEq(installedPlugin.processKey(), customKey);
+    }
+
+    function testProcessKeyConfiguredOnInit() public view {
         assertEq(plugin.processKey(), processKey);
     }
-    function test_InitialValidatorAddressStored() external {
+    function test_InitialValidatorAddressStored() external view {
         assertEq(plugin.validatorAddress(), validator);
     }
 
