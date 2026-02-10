@@ -57,12 +57,12 @@ contract HarmonyValidatorOptInRegistry {
         return (s.votingAddress, s.optedIn);
     }
 
-    function operatorByAlias(address alias) external view returns (address operator) {
-        return _operatorByAlias[alias];
+    function operatorByAlias(address _alias) external view returns (address operator) {
+        return _operatorByAlias[_alias];
     }
 
-    function isAlias(address alias) external view returns (bool) {
-        return _operatorByAlias[alias] != address(0);
+    function isAlias(address _alias) external view returns (bool) {
+        return _operatorByAlias[_alias] != address(0);
     }
 
     function operatorCount() external view returns (uint256) {
