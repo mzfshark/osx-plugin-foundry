@@ -3,49 +3,49 @@
   "chainId": 1666600000,
   "contracts": {
     "HarmonyHIPVotingPlugin": {
-      "address": "",
-      "txHash": "",
-      "note": "To be deployed - HIP voting plugin implementation"
+      "address": "0xd0f9fa7ba150f2988a131bb529a72b7d998ce0d5",
+      "txHash": "0x504148812603d752d8d695845a9b8d295da04e95d7e95805a8a5084b1ce5ceed",
+      "note": "Deployed (2026-01-28) - HIP voting plugin implementation"
     },
     "HarmonyHIPVotingSetup": {
-      "address": "0xD872C4333CF09e3794DD8e8e8d4E09C0124E830D",
-      "txHash": "",
-      "note": "Deployed (2026-01-16) - HIP voting setup contract with allowlist check"
+      "address": "0xf041f77ad08efe24cccf50c630dfa141eff2f33d",
+      "txHash": "0x504148812603d752d8d695845a9b8d295da04e95d7e95805a8a5084b1ce5ceed",
+      "note": "Deployed (2026-01-28) - HIP voting setup contract with allowlist check"
     },
     "HarmonyHIPVotingPluginRepo": {
-      "address": "0xE6E54ac81EFB41fdf0D559eeae51DbFB3C750088",
-      "txHash": "",
-      "note": "Deployed (2026-01-16) - HIP voting plugin repository"
+      "address": "0xe155d19e0acd3c209173fe78c105287f75a4d4bd",
+      "txHash": "0xa6ba9a7008ec5656ad441a5b13d442eac85c8c2c4d81529329b2dd6999e1585a",
+      "note": "Deployed (2026-01-28) - HIP voting plugin repository"
     },
     "HarmonyDelegationVotingPlugin": {
-      "address": "",
-      "txHash": "",
-      "note": "To be deployed - Delegation voting plugin implementation with validatorAddress storage"
+      "address": "0x0c090cc1757159954552b119d3fc340e2b601464",
+      "txHash": "0x52eb19d73bc732656878674aed2698d6500517f987714265a23a43a51a6e7959",
+      "note": "Deployed (2026-01-28) - Delegation voting plugin implementation with validatorAddress storage"
     },
     "HarmonyDelegationVotingSetup": {
-      "address": "0x377Fa6d56066b81a7233043302B7e1569591253E",
-      "txHash": "",
-      "note": "Deployed (2026-01-16) - Delegation voting setup contract (requires validatorAddress param)"
+      "address": "0x628b4ad702005c6fdbb4f67ed8107057b7438adb",
+      "txHash": "0x52eb19d73bc732656878674aed2698d6500517f987714265a23a43a51a6e7959",
+      "note": "Deployed (2026-01-28) - Delegation voting setup contract"
     },
     "HarmonyDelegationVotingPluginRepo": {
-      "address": "0x4ac3dAfD88DeFd9a000076365e28B3dE3A862700",
-      "txHash": "",
-      "note": "Deployed (2026-01-16) - Delegation voting plugin repository"
+      "address": "0x5fc989f79f34be026385645d0650687c96a41638",
+      "txHash": "0xbbf741ac1716fce0657004a8479e973c44346f895fc075f09cbc443e87b97d5f",
+      "note": "Deployed (2026-01-28) - Delegation voting plugin repository"
     },
     "HIPPluginAllowlist": {
-      "address": "0x3653c14Ca7bef3E7B02ca04E65f6fc174D48c5C0",
-      "txHash": "",
-      "note": "Implementation address pending - Allowlist contract for HIP plugin access control"
+      "address": "0x78450d61704533f4b12d8695056ea142e5e1673f",
+      "txHash": "0x62305fb89bc765bd8562a043e32ec5f72ce65eab46137589ed6487842910895b",
+      "note": "Deployed (2026-01-28) - Implementation for HIP allowlist access control"
     },
     "HIPPluginAllowlistProxy": {
-      "address": "0x8D151e5021F495e23FbBC3180b4EeA1a6B251Fd0",
-      "txHash": "",
-      "note": "Deployed (2026-01-16) - UUPS Proxy for HIP allowlist (initialized with Management DAO)"
+      "address": "0xe7b0445369b7a653ad4f05f79b5797bc3fefcef7",
+      "txHash": "0x615d1ff90f2856dc94c2fa86b0e0618a838522bb39019e36aba2db965f27aa39",
+      "note": "Deployed (2026-01-28) - UUPS Proxy for HIP allowlist (initialized with Management DAO)"
     },
     "HarmonyValidatorOptInRegistry": {
-      "address": "0x9ec4D1ea72ADA189Ae81328CB80c3276C5dCbe5d",
-      "txHash": "",
-      "note": "Deployed (2026-01-16) - Validator opt-in registry for voting delegation"
+      "address": "0xefd431a6c97bff60dd60eeadedee3ce38e561180",
+      "txHash": "0xe374c0ed6a921c5f61c732dd0f34915fe156cb8faea8278e48af0e105b422889",
+      "note": "Deployed (2026-01-28) - Validator opt-in registry for voting delegation"
     }
   },
   "deployConfig": {
@@ -63,7 +63,7 @@
       "PLUGIN_REPO_FACTORY_ADDRESS=0x753e32a799F319d25aCf138b343003ce0A5171eB",
       "PLUGIN_REPO_MAINTAINER_ADDRESS",
       "ORACLE_ADDRESS",
-      "MANAGEMENT_DAO_ADDRESS=0x8f9a805603B6fd5df7e8d284CA66CcaF77C3BeF6",
+      "MANAGEMENT_DAO_ADDRESS=0x700cBBB4881D286628ca9aD3d9DF390D9c0840a2",
       "NETWORK_NAME=harmony"
     ],
     "features": {
@@ -72,5 +72,5 @@
       "HIPPluginAllowlist": "Controlled by Management DAO, manages which DAOs can use HIP plugin"
     }
   },
-  "generatedAt": "2026-01-13T15:30:00.000Z"
+  "generatedAt": "2026-01-28T18:00:00.000Z"
 }

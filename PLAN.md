@@ -74,6 +74,16 @@ Deployments to Studio fail with: `network not supported by registrar: no network
 
 ---
 
+## Phase 5 — Mainnet Deployment (Completed 2026-01-28)
+
+- [x] Deploy logic and setup contracts to Harmony Mainnet ✅
+- [x] Create `PluginRepos` for HIP and Delegation plugins ✅
+- [x] Initialize `HIPPluginAllowlist` proxy ✅
+- [x] Deploy `HarmonyValidatorOptInRegistry` ✅
+- [x] Update JSON registries with production addresses ✅
+
+---
+
 ## References
 
 - Plan index: `docs/plans/INDEX_HARMONYVOTING.md`
