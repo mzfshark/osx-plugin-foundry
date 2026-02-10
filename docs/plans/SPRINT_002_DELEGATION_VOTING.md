@@ -22,6 +22,17 @@ This sprint delivers the complete DelegationVoting plugin experience: correct me
 
 ---
 
+## Progress Update
+
+- `processKey` propagation: DONE (frontend encodes and backend persists `processKey` as verified by setup/install tests)
+- Harmony RPC service: DONE (backend `harmonyRpcService` implemented to fetch validator/delegations)
+- Backend versioning & indexer: DONE (added `contractsConfigVersion` helper and refactored indexer to support env overrides like `HARMONY_MAINNET_CONTRACTS_VERSION`)
+- Next: run E2E smoke (indexer → API → frontend) to validate proposal listing and validator UI in staging
+
+---
+
+---
+
 ## Problem Analysis
 
 | Issue                  | Current State          | Root Cause                      | Target State                    |

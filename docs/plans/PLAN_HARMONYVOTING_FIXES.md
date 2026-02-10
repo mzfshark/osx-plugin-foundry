@@ -54,6 +54,7 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 - **DelegationVoting — validator/delegators missing:** Resolved for the Members + Member detail surfaces (proposal listing remains pending).
 - **DelegationVoting — proposals not listed:** Not yet reproduced in this sprint doc; blocked on evidence collection.
 - **HIPVoting — allowlist permission flow:** Not yet documented end-to-end; remains pending.
+- **Backend: deterministic contracts versioning:** Implemented `contractsConfigVersion` helper in `Aragon-app-backend` and refactored the indexer to use it (supports `HARMONY_MAINNET_CONTRACTS_VERSION` / `HARMONY_TESTNET_CONTRACTS_VERSION` environment overrides). Unit test added. Status: DONE
 
 ---
 
@@ -73,6 +74,17 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
     ├── BUG-003: Fix DelegationVoting validator event emission
     ├── FEATURE-001: Implement HIPVoting allowlist UX flow
     └── TASK-001: Re-verify Setup contracts on Blockscout/Sourcify
+└── [PLAN-HarmonyVoting | SPRINT-004] HIP Voting E2E Production Readiness
+    ├── FEATURE-001: Integrate OptInRegistry alias resolution
+    ├── FEATURE-002: Auto opt-out after 2 consecutive missed votes
+    ├── FEATURE-003: Runtime HIPAllowlist enforcement
+    ├── TASK-001: Restrict proposer to opted-in validators
+    ├── TASK-002: Add EnumerableSet + reverse-alias to OptInRegistry
+    ├── TASK-003: Update HIPVotingSetup to wire references
+    ├── TASK-004: Unit tests for HIPPluginAllowlist
+    ├── TASK-005: Unit tests for OptInRegistry v2
+    ├── TASK-006: E2E integration tests full lifecycle
+    └── TASK-007: Storage layout validation for UUPS upgrade
 ```
 
 **Note:** Frontend integration (SPRINT-003) moved to [aragon-app plan](../../../aragon-app/docs/plans/PLAN_HARMONYVOTING_FRONTEND.md).
@@ -110,11 +122,27 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 **Goal:** Update frontend mappings, fix form submission, add subgraph handlers, reindex data.
 
 - [x] [PLAN-HarmonyVoting | SPRINT-003 | BUG-001] Fix frontend processKey form submission [key:01JK8QXYZ0011] [labels:type:bug, area:frontend] [status:DONE] [priority:HIGH] [estimate:6h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-003 | BUG-002] Fix proposal indexing for DelegationVoting [key:01JK8QXYZ0012] [labels:type:bug, area:indexer] [status:TODO] [priority:URGENT] [estimate:8h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-003 | BUG-002] Fix proposal indexing for DelegationVoting [key:01JK8QXYZ0012] [labels:type:bug, area:indexer] [status:IN_PROGRESS] [priority:URGENT] [estimate:8h] (indexer core addresses selection refactored to semver resolver)
 - [ ] [PLAN-HarmonyVoting | SPRINT-003 | TASK-001] Update networkDefinitions with correct addresses [key:01JK8QXYZ0013] [labels:type:task, area:frontend] [status:TODO] [priority:HIGH] [estimate:2h]
 - [ ] [PLAN-HarmonyVoting | SPRINT-003 | TASK-002] Add subgraph mappings for HarmonyVoting events [key:01JK8QXYZ0014] [labels:type:task, area:subgraph] [status:TODO] [priority:HIGH] [estimate:8h]
 - [ ] [PLAN-HarmonyVoting | SPRINT-003 | TASK-003] Run reindex/backfill scripts [key:01JK8QXYZ0015] [labels:type:task, area:indexer] [status:TODO] [priority:HIGH] [estimate:4h]
 - [ ] [PLAN-HarmonyVoting | SPRINT-003 | TASK-004] E2E validation tests [key:01JK8QXYZ0016] [labels:type:task, area:testing] [status:TODO] [priority:HIGH] [estimate:6h]
+
+### [PLAN-HarmonyVoting | SPRINT-004] HIP Voting E2E Production Readiness
+
+**Goal:** Close all integration gaps for HIP Voting: alias voting, auto opt-out, runtime allowlist enforcement, proposer restriction, and full test coverage.  
+**Plan:** [SPRINT_004_HIP_E2E_PRODUCTION.md](SPRINT_004_HIP_E2E_PRODUCTION.md)
+
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-001] Integrate OptInRegistry alias resolution into HarmonyVotingBase [key:01JKVHIPE2E001] [labels:type:feature, area:contracts] [status:TODO] [priority:HIGH] [estimate:6h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-002] Auto opt-out after 2 consecutive missed votes [key:01JKVHIPE2E002] [labels:type:feature, area:contracts] [status:TODO] [priority:HIGH] [estimate:8h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-003] Runtime HIPAllowlist enforcement on createProposal and castVote [key:01JKVHIPE2E003] [labels:type:feature, area:contracts] [status:TODO] [priority:HIGH] [estimate:4h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-001] Restrict proposer to opted-in validators or aliases [key:01JKVHIPE2E004] [labels:type:task, area:contracts] [status:TODO] [priority:HIGH] [estimate:3h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-002] Add EnumerableSet and reverse-alias lookup to OptInRegistry [key:01JKVHIPE2E005] [labels:type:task, area:contracts] [status:TODO] [priority:HIGH] [estimate:4h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-003] Update HarmonyHIPVotingSetup to wire OptInRegistry + Allowlist references [key:01JKVHIPE2E006] [labels:type:task, area:contracts] [status:TODO] [priority:HIGH] [estimate:3h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-004] Unit tests for HIPPluginAllowlist [key:01JKVHIPE2E007] [labels:type:task, area:tests] [status:TODO] [priority:HIGH] [estimate:4h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-005] Unit tests for OptInRegistry v2 [key:01JKVHIPE2E008] [labels:type:task, area:tests] [status:TODO] [priority:HIGH] [estimate:4h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-006] E2E integration tests full lifecycle [key:01JKVHIPE2E009] [labels:type:task, area:tests] [status:TODO] [priority:HIGH] [estimate:6h]
+- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-007] Storage layout validation for UUPS upgrade safety [key:01JKVHIPE2E010] [labels:type:task, area:contracts] [status:TODO] [priority:MEDIUM] [estimate:2h]
 
 ---
 
@@ -143,6 +171,10 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 - ⚠️ **Risk 4:** HIPVoting allowlist requires management DAO action
   → Mitigation: Document clear admin runbook; automate via multisig proposal
   → Contingency: Temporary bypass flag for staging/testing
+
+- ⚠️ **Risk 5:** Contracts config version selection may be order-dependent (JSON key ordering). If consumers assume the first key is active, a reformat or new version insertion can change runtime addresses.
+  → Mitigation: Use semver-based resolver and provide `HARMONY_*_CONTRACTS_VERSION` env overrides to pin runtime version. Add CI/PR checklist to require explicit resolver usage when reading versioned contract JSON.
+  → Contingency: Rollback via env pin or redeploy with corrected config keys.
 
 ---
 
