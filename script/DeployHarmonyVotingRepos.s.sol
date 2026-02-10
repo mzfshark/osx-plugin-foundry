@@ -14,6 +14,7 @@ import {HarmonyHIPVotingSetup} from "../src/setup/HarmonyHIPVotingSetup.sol";
 import {HarmonyDelegationVotingSetup} from "../src/setup/HarmonyDelegationVotingSetup.sol";
 import {HarmonyValidatorOptInRegistry} from "../src/harmony/HarmonyValidatorOptInRegistry.sol";
 import {HIPPluginAllowlist} from "../src/harmony/HIPPluginAllowlist.sol";
+import {IHarmonyValidatorOptInRegistry, IHIPPluginAllowlist} from "../src/harmony/IHarmonyInterfaces.sol";
 
 /**
  * Deploys Harmony HIP + Delegation voting plugin repos, plus the opt-in registry.
@@ -149,9 +150,25 @@ contract DeployHarmonyVotingReposScript is Script {
         );
         hipAllowlist = HIPPluginAllowlist(allowlistProxy);
 
+        // Deploy opt-in registry (controlled by Management DAO)
+        optInRegistry = HarmonyValidatorOptInRegistry(
+            ProxyLib.deployUUPSProxy(
+                address(new HarmonyValidatorOptInRegistry()),
+                abi.encodeCall(HarmonyValidatorOptInRegistry.initialize, (IDAO(managementDaoAddress)))
+            )
+        );
+
         // Deploy plugin setups
-        hipSetup = new HarmonyHIPVotingSetup(oracleAddress, hipAllowlist);
-        delegationSetup = new HarmonyDelegationVotingSetup(oracleAddress);
+        hipSetup = new HarmonyHIPVotingSetup(
+            oracleAddress,
+            hipAllowlist,
+            IHarmonyValidatorOptInRegistry(address(optInRegistry))
+        );
+        delegationSetup = new HarmonyDelegationVotingSetup(
+            oracleAddress,
+            IHarmonyValidatorOptInRegistry(address(0)),
+            IHIPPluginAllowlist(address(hipAllowlist))
+        );
 
         // NOTE: Do NOT register on PluginRepoRegistry here (can revert with ENSNotSupported on Harmony).
         // The app/backend can still use the repo addresses directly.
@@ -163,8 +180,6 @@ contract DeployHarmonyVotingReposScript is Script {
             " ",
             " "
         );
-
-        optInRegistry = new HarmonyValidatorOptInRegistry();
     }
 
     function printDeployment() public view {

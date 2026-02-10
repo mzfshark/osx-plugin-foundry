@@ -8,11 +8,14 @@ import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/Proxy
 import {HarmonyDelegationVotingPlugin} from "../src/harmony/HarmonyDelegationVotingPlugin.sol";
 import {HarmonyVotingBase} from "../src/harmony/HarmonyVotingBase.sol";
 import {HarmonyDelegationVotingSetup} from "../src/setup/HarmonyDelegationVotingSetup.sol";
+import {IHarmonyValidatorOptInRegistry, IHIPPluginAllowlist} from "../src/harmony/IHarmonyInterfaces.sol";
+import {HIPPluginAllowlist} from "../src/harmony/HIPPluginAllowlist.sol";
 
 contract HarmonyDelegationVotingTest is TestBase {
     DAO dao;
     HarmonyDelegationVotingPlugin plugin;
     HarmonyDelegationVotingSetup setup;
+    HIPPluginAllowlist allowlist;
 
     address daoOwner;
     address oracle;
@@ -30,8 +33,7 @@ contract HarmonyDelegationVotingTest is TestBase {
 
         DAO daoBase = new DAO();
         HarmonyDelegationVotingPlugin pluginBase = new HarmonyDelegationVotingPlugin();
-
-        setup = new HarmonyDelegationVotingSetup(oracle);
+        HIPPluginAllowlist allowlistBase = new HIPPluginAllowlist();
 
         dao = DAO(
             payable(
@@ -42,17 +44,43 @@ contract HarmonyDelegationVotingTest is TestBase {
             )
         );
 
+        allowlist = HIPPluginAllowlist(
+            ProxyLib.deployUUPSProxy(
+                address(allowlistBase),
+                abi.encodeCall(HIPPluginAllowlist.initialize, (dao))
+            )
+        );
+
+        setup = new HarmonyDelegationVotingSetup(
+            oracle,
+            IHarmonyValidatorOptInRegistry(address(0)),
+            IHIPPluginAllowlist(address(allowlist))
+        );
+
         plugin = HarmonyDelegationVotingPlugin(
             ProxyLib.deployUUPSProxy(
                 address(pluginBase),
-                abi.encodeCall(HarmonyDelegationVotingPlugin.initialize, (dao, validator, processKey))
+                abi.encodeCall(
+                    HarmonyDelegationVotingPlugin.initialize,
+                    (
+                        dao,
+                        IHarmonyValidatorOptInRegistry(address(0)),
+                        IHIPPluginAllowlist(address(allowlist)),
+                        validator,
+                        processKey
+                    )
+                )
             )
         );
 
         vm.startPrank(daoOwner);
         dao.grant(address(plugin), oracle, plugin.ORACLE_PERMISSION_ID());
         dao.grant(address(plugin), daoOwner, plugin.UPDATE_VALIDATOR_PERMISSION_ID());
+        dao.grant(address(allowlist), daoOwner, allowlist.MANAGE_ALLOWLIST_PERMISSION_ID());
         vm.stopPrank();
+
+        vm.prank(daoOwner);
+        allowlist.allowDAO(address(dao));
 
         vm.label(address(dao), "DAO");
         vm.label(address(plugin), "HarmonyDelegationVotingPlugin");
@@ -93,6 +121,15 @@ contract HarmonyDelegationVotingTest is TestBase {
         vm.prank(carol);
         vm.expectRevert();
         plugin.setValidatorAddress(newValidator);
+    }
+
+    function test_RevertWhen_DaoNotAllowlisted() external {
+        vm.prank(daoOwner);
+        allowlist.disallowDAO(address(dao));
+
+        vm.prank(carol);
+        vm.expectRevert("DAO_NOT_ALLOWED");
+        plugin.createProposal(bytes("ipfs://QmTestDelegation"), uint64(block.timestamp), uint64(block.timestamp + 10), 10);
     }
 
     function _hashPair(bytes32 a, bytes32 b) internal pure returns (bytes32) {

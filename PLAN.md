@@ -58,8 +58,21 @@ Deployments to Studio fail with: `network not supported by registrar: no network
 ### Phase 3 — Verification & Handoff
 
 - [x] Re-run tests and confirm no regressions ✅ (6/6 passed)
-- [ ] Update flattened artifacts if required
-- [ ] Document required addresses/events for backend/subgraph/app plans
+- [x] Update flattened artifacts if required ✅ (Done)
+- [x] Document required addresses/events for backend/subgraph/app plans ✅ (Done)
+
+---
+
+## Phase 4 — HIP Voting E2E (Completed 2026-02-10)
+
+- [x] Integrated `OptInRegistry` for alias voting support ✅
+- [x] Implemented auto opt-out logic for validator inactivity ✅
+- [x] Added `HIPPluginAllowlist` runtime enforcement ✅
+- [x] Restricted proposal creation to validators/aliases ✅
+- [x] Enumerable validator set for oracle support ✅
+- [x] Full E2E Forge test suite passing (26 tests) ✅
+
+---
 
 ## References
 

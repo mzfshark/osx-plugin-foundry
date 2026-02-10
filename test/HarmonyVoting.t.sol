@@ -7,6 +7,7 @@ import {DAO} from "@aragon/osx/core/dao/DAO.sol";
 import {HarmonyHIPVotingPlugin} from "../src/harmony/HarmonyHIPVotingPlugin.sol";
 import {HarmonyVotingBase} from "../src/harmony/HarmonyVotingBase.sol";
 import {HarmonyVotingBuilder} from "./builders/HarmonyVotingBuilder.sol";
+import {IHarmonyValidatorOptInRegistry, IHIPPluginAllowlist} from "../src/harmony/IHarmonyInterfaces.sol";
 
 contract HarmonyVotingTest is TestBase {
     DAO dao;
@@ -19,21 +20,22 @@ contract HarmonyVotingTest is TestBase {
         proposer = alice;
         oracle = bob;
 
-        (dao, plugin) = new HarmonyVotingBuilder().withDaoOwner(alice).build(proposer, oracle);
-
-        // Ensure the proposer address has >= 1 ONE.
-        vm.deal(proposer, 1 ether);
+        (dao, plugin) = new HarmonyVotingBuilder().withDaoOwner(alice).build(
+            proposer,
+            oracle,
+            IHarmonyValidatorOptInRegistry(address(0)),
+            IHIPPluginAllowlist(address(0))
+        );
     }
 
     function _hashPair(bytes32 a, bytes32 b) internal pure returns (bytes32) {
         return a < b ? keccak256(abi.encodePacked(a, b)) : keccak256(abi.encodePacked(b, a));
     }
 
-    function test_RevertWhen_CreateProposalWithInsufficientBalance() external {
-        vm.deal(carol, 0.99 ether);
+    function test_RevertWhen_CreateProposalWithInvalidDates() external {
         vm.prank(carol);
-        vm.expectRevert("INSUFFICIENT_PROPOSER_BALANCE");
-        plugin.createProposal(bytes("m"), uint64(block.timestamp), uint64(block.timestamp + 100), uint64(10));
+        vm.expectRevert("INVALID_DATES");
+        plugin.createProposal(bytes("m"), uint64(block.timestamp), uint64(block.timestamp), uint64(10));
     }
 
     function test_Flow_CastThenSnapshotThenSubmitPowerThenClose() external {

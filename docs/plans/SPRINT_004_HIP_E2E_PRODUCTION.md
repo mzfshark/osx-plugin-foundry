@@ -5,7 +5,7 @@
 **Sprint Duration:** 2 weeks (2026-02-10 → 2026-02-24)  
 **Priority:** HIGH  
 **Estimative Hours:** 44h  
-**Status:** TODO
+**Status:** COMPLETED
 
 ---
 
@@ -34,13 +34,13 @@ This sprint delivers **end-to-end production readiness** for the HIP Voting Plug
 
 ## Sprint Goals
 
-- [ ] Goal 1: Integrate OptInRegistry with HarmonyVotingBase so alias wallets can vote on behalf of validators
-- [ ] Goal 2: Implement auto opt-out mechanism for validators missing 2 consecutive proposals
-- [ ] Goal 3: Add runtime allowlist enforcement on `createProposal()` and `castVote()`
-- [ ] Goal 4: Restrict proposal creation to opted-in validators or their aliases
-- [ ] Goal 5: Make validator set enumerable on-chain for oracle consumption
-- [ ] Goal 6: Full test coverage for all new and existing contracts (HIPPluginAllowlist, OptInRegistry, integration)
-- [ ] Goal 7: Update Setup contract to wire OptInRegistry reference into the plugin
+- [x] Goal 1: Integrate OptInRegistry with HarmonyVotingBase so alias wallets can vote on behalf of validators
+- [x] Goal 2: Implement auto opt-out mechanism for validators missing 2 consecutive proposals
+- [x] Goal 3: Add runtime allowlist enforcement on `createProposal()` and `castVote()`
+- [x] Goal 4: Restrict proposal creation to opted-in validators or their aliases
+- [x] Goal 5: Make validator set enumerable on-chain for oracle consumption
+- [x] Goal 6: Full test coverage for all new and existing contracts (HIPPluginAllowlist, OptInRegistry, integration)
+- [x] Goal 7: Update Setup contract to wire OptInRegistry reference into the plugin
 
 ---
 
@@ -101,19 +101,19 @@ After (this sprint):
 
 ### Week 1 (2026-02-10 → 2026-02-17) — Core Contract Changes
 
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-001] Integrate OptInRegistry alias resolution into HarmonyVotingBase [key:01JKVHIPE2E001] [labels:type:feature, area:contracts] [status:TODO] [priority:HIGH] [estimate:6h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-002] Auto opt-out after 2 consecutive missed votes [key:01JKVHIPE2E002] [labels:type:feature, area:contracts] [status:TODO] [priority:HIGH] [estimate:8h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-003] Runtime HIPAllowlist enforcement on createProposal and castVote [key:01JKVHIPE2E003] [labels:type:feature, area:contracts] [status:TODO] [priority:HIGH] [estimate:4h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-001] Restrict proposer to opted-in validators or aliases [key:01JKVHIPE2E004] [labels:type:task, area:contracts] [status:TODO] [priority:HIGH] [estimate:3h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-002] Add EnumerableSet and reverse-alias lookup to OptInRegistry [key:01JKVHIPE2E005] [labels:type:task, area:contracts] [status:TODO] [priority:HIGH] [estimate:4h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-001] Integrate OptInRegistry alias resolution into HarmonyVotingBase [key:01JKVHIPE2E001] [labels:type:feature, area:contracts] [status:COMPLETED] [priority:HIGH] [estimate:6h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-002] Auto opt-out after 2 consecutive missed votes [key:01JKVHIPE2E002] [labels:type:feature, area:contracts] [status:COMPLETED] [priority:HIGH] [estimate:8h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | FEATURE-003] Runtime HIPAllowlist enforcement on createProposal and castVote [key:01JKVHIPE2E003] [labels:type:feature, area:contracts] [status:COMPLETED] [priority:HIGH] [estimate:4h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | TASK-001] Restrict proposer to opted-in validators or aliases [key:01JKVHIPE2E004] [labels:type:task, area:contracts] [status:COMPLETED] [priority:HIGH] [estimate:3h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | TASK-002] Add EnumerableSet and reverse-alias lookup to OptInRegistry [key:01JKVHIPE2E005] [labels:type:task, area:contracts] [status:COMPLETED] [priority:HIGH] [estimate:4h]
 
 ### Week 2 (2026-02-17 → 2026-02-24) — Setup, Tests & Integration
 
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-003] Update HarmonyHIPVotingSetup to wire OptInRegistry + Allowlist references [key:01JKVHIPE2E006] [labels:type:task, area:contracts] [status:TODO] [priority:HIGH] [estimate:3h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-004] Comprehensive unit tests for HIPPluginAllowlist [key:01JKVHIPE2E007] [labels:type:task, area:tests] [status:TODO] [priority:HIGH] [estimate:4h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-005] Comprehensive unit tests for OptInRegistry v2 (enumeration, alias, auto opt-out) [key:01JKVHIPE2E008] [labels:type:task, area:tests] [status:TODO] [priority:HIGH] [estimate:4h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-006] E2E integration tests: full lifecycle (opt-in → propose → alias vote → close → auto opt-out) [key:01JKVHIPE2E009] [labels:type:task, area:tests] [status:TODO] [priority:HIGH] [estimate:6h]
-- [ ] [PLAN-HarmonyVoting | SPRINT-004 | TASK-007] Storage layout validation for UUPS upgrade safety [key:01JKVHIPE2E010] [labels:type:task, area:contracts] [status:TODO] [priority:MEDIUM] [estimate:2h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | TASK-003] Update HarmonyHIPVotingSetup to wire OptInRegistry + Allowlist references [key:01JKVHIPE2E006] [labels:type:task, area:contracts] [status:COMPLETED] [priority:HIGH] [estimate:3h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | TASK-004] Comprehensive unit tests for HIPPluginAllowlist [key:01JKVHIPE2E007] [labels:type:task, area:tests] [status:COMPLETED] [priority:HIGH] [estimate:4h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | TASK-005] Comprehensive unit tests for OptInRegistry v2 (enumeration, alias, auto opt-out) [key:01JKVHIPE2E008] [labels:type:task, area:tests] [status:COMPLETED] [priority:HIGH] [estimate:4h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | TASK-006] E2E integration tests: full lifecycle (opt-in → propose → alias vote → close → auto opt-out) [key:01JKVHIPE2E009] [labels:type:task, area:tests] [status:COMPLETED] [priority:HIGH] [estimate:6h]
+- [x] [PLAN-HarmonyVoting | SPRINT-004 | TASK-007] Storage layout validation for UUPS upgrade safety [key:01JKVHIPE2E010] [labels:type:task, area:contracts] [status:COMPLETED] [priority:MEDIUM] [estimate:2h]
 
 ---
 
@@ -131,11 +131,11 @@ After (this sprint):
 - Requires: TASK-002 (reverse-alias lookup in registry)
 
 **Acceptance Criteria:**
-- [ ] Validator can vote directly from operator wallet
-- [ ] Validator's registered alias can vote on behalf of operator
-- [ ] Vote is recorded under operator address (for power submission consistency)
-- [ ] Non-opted-in address cannot vote
-- [ ] Alias change takes effect immediately for future votes
+- [x] Validator can vote directly from operator wallet
+- [x] Validator's registered alias can vote on behalf of operator
+- [x] Vote is recorded under operator address (for power submission consistency)
+- [x] Non-opted-in address cannot vote
+- [x] Alias change takes effect immediately for future votes
 
 ### FEATURE-002: Auto Opt-Out After 2 Consecutive Missed Votes
 
@@ -154,11 +154,11 @@ After (this sprint):
 **Gas consideration:** Iterating all validators at close time is O(n). For Harmony's validator set (~100 validators), this is acceptable. If the set grows > 500, consider off-chain tracking with Merkle proof.
 
 **Acceptance Criteria:**
-- [ ] Validator missing 1 proposal: counter = 1, still opted in
-- [ ] Validator missing 2 consecutive proposals: auto opt-out triggered
-- [ ] Voting in any proposal resets the counter to 0
-- [ ] Auto-opted-out validator must re-register via `optIn()` to participate again
-- [ ] Event emitted on auto opt-out
+- [x] Validator missing 1 proposal: counter = 1, still opted in
+- [x] Validator missing 2 consecutive proposals: auto opt-out triggered
+- [x] Voting in any proposal resets the counter to 0
+- [x] Auto-opted-out validator must re-register via `optIn()` to participate again
+- [x] Event emitted on auto opt-out
 
 ### FEATURE-003: Runtime HIPAllowlist Enforcement
 
@@ -171,10 +171,10 @@ After (this sprint):
 - `submitVotingPower()` and `closeProposal()` do NOT require the check (allow finalization of in-flight proposals)
 
 **Acceptance Criteria:**
-- [ ] If DAO is removed from allowlist, new proposals cannot be created
-- [ ] If DAO is removed from allowlist, new votes cannot be cast
-- [ ] In-flight proposals (already created) can still be finalized and closed
-- [ ] Re-allowing the DAO restores full functionality
+- [x] If DAO is removed from allowlist, new proposals cannot be created
+- [x] If DAO is removed from allowlist, new votes cannot be cast
+- [x] In-flight proposals (already created) can still be finalized and closed
+- [x] Re-allowing the DAO restores full functionality
 
 ### TASK-001: Restrict Proposer to Opted-In Validators/Aliases
 
@@ -186,9 +186,9 @@ After (this sprint):
 - Consider keeping a minimum balance gate as an anti-spam measure (e.g., 100 ONE) alongside the validator check
 
 **Acceptance Criteria:**
-- [ ] Only opted-in validators or their aliases can create proposals
-- [ ] Non-validator addresses are rejected even if funded
-- [ ] A formerly opted-in validator who was auto-opted-out cannot create proposals
+- [x] Only opted-in validators or their aliases can create proposals
+- [x] Non-validator addresses are rejected even if funded
+- [x] A formerly opted-in validator who was auto-opted-out cannot create proposals
 
 ### TASK-002: Add EnumerableSet and Reverse-Alias Lookup to OptInRegistry
 

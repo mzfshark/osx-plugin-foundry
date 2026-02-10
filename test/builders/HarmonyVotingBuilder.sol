@@ -5,6 +5,7 @@ import {TestBase} from "../lib/TestBase.sol";
 
 import {DAO} from "@aragon/osx/core/dao/DAO.sol";
 import {HarmonyHIPVotingPlugin} from "../../src/harmony/HarmonyHIPVotingPlugin.sol";
+import {IHarmonyValidatorOptInRegistry, IHIPPluginAllowlist} from "../../src/harmony/IHarmonyInterfaces.sol";
 import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/ProxyLib.sol";
 
 contract HarmonyVotingBuilder is TestBase {
@@ -24,7 +25,9 @@ contract HarmonyVotingBuilder is TestBase {
 
     function build(
         address proposer,
-        address oracle
+        address oracle,
+        IHarmonyValidatorOptInRegistry optInRegistry,
+        IHIPPluginAllowlist hipAllowlist
     ) external returns (DAO dao, HarmonyHIPVotingPlugin plugin) {
         dao = DAO(
             payable(
@@ -38,7 +41,7 @@ contract HarmonyVotingBuilder is TestBase {
         plugin = HarmonyHIPVotingPlugin(
             ProxyLib.deployUUPSProxy(
                 address(HIP_PLUGIN_BASE),
-                abi.encodeCall(HarmonyHIPVotingPlugin.initialize, (dao))
+                abi.encodeCall(HarmonyHIPVotingPlugin.initialize, (dao, optInRegistry, hipAllowlist))
             )
         );
 

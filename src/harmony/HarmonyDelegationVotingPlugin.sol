@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 
 import {HarmonyVotingBase} from "./HarmonyVotingBase.sol";
 import {IDAO} from "@aragon/osx/core/dao/DAO.sol";
+import {IHarmonyValidatorOptInRegistry, IHIPPluginAllowlist} from "./IHarmonyInterfaces.sol";
 
 /// @notice Delegation (community) voting: delegators vote on validator intent; weights come from snapshot via Merkle root.
 /// @dev This plugin allows delegators of a specific validator to participate in DAO governance.
@@ -39,8 +40,14 @@ contract HarmonyDelegationVotingPlugin is HarmonyVotingBase {
     /// @param _dao The DAO contract.
     /// @param _validatorAddress The initial validator address whose delegators can vote.
     /// @param _processKey The process key used by offchain systems to categorize proposals for this plugin.
-    function initialize(IDAO _dao, address _validatorAddress, bytes32 _processKey) external initializer {
-        __HarmonyVotingBase_init(_dao);
+    function initialize(
+        IDAO _dao,
+        IHarmonyValidatorOptInRegistry _optInRegistry,
+        IHIPPluginAllowlist _hipAllowlist,
+        address _validatorAddress,
+        bytes32 _processKey
+    ) external initializer {
+        __HarmonyVotingBase_init(_dao, _optInRegistry, _hipAllowlist);
         _setValidatorAddress(_validatorAddress);
         _setProcessKey(_processKey);
     }

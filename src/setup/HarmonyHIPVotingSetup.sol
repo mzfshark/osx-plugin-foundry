@@ -8,20 +8,28 @@ import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/Proxy
 
 import {HarmonyHIPVotingPlugin} from "../harmony/HarmonyHIPVotingPlugin.sol";
 import {HIPPluginAllowlist} from "../harmony/HIPPluginAllowlist.sol";
+import {IHarmonyValidatorOptInRegistry, IHIPPluginAllowlist} from "../harmony/IHarmonyInterfaces.sol";
 
 contract HarmonyHIPVotingSetup is PluginSetup {
     address public immutable ORACLE;
     HIPPluginAllowlist public immutable ALLOWLIST;
+    IHarmonyValidatorOptInRegistry public immutable OPT_IN_REGISTRY;
 
     /// @notice Thrown when a DAO is not authorized to install the HIP plugin.
     /// @param dao The DAO address that is not authorized.
     error DAONotAuthorized(address dao);
 
-    constructor(address _oracle, HIPPluginAllowlist _allowlist) PluginSetup(address(new HarmonyHIPVotingPlugin())) {
+    constructor(
+        address _oracle,
+        HIPPluginAllowlist _allowlist,
+        IHarmonyValidatorOptInRegistry _optInRegistry
+    ) PluginSetup(address(new HarmonyHIPVotingPlugin())) {
         require(_oracle != address(0), "INVALID_ORACLE");
         require(address(_allowlist) != address(0), "INVALID_ALLOWLIST");
+        require(address(_optInRegistry) != address(0), "INVALID_OPT_IN_REGISTRY");
         ORACLE = _oracle;
         ALLOWLIST = _allowlist;
+        OPT_IN_REGISTRY = _optInRegistry;
     }
 
     function prepareInstallation(
@@ -37,7 +45,10 @@ contract HarmonyHIPVotingSetup is PluginSetup {
 
         plugin = ProxyLib.deployUUPSProxy(
             implementation(),
-            abi.encodeCall(HarmonyHIPVotingPlugin.initialize, (IDAO(_dao)))
+            abi.encodeCall(
+                HarmonyHIPVotingPlugin.initialize,
+                (IDAO(_dao), OPT_IN_REGISTRY, IHIPPluginAllowlist(address(ALLOWLIST)))
+            )
         );
 
         PermissionLib.MultiTargetPermission[] memory permissions = new PermissionLib.MultiTargetPermission[](2);

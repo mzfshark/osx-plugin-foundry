@@ -7,13 +7,22 @@ import {ProxyLib} from "@aragon/osx-commons-contracts/src/utils/deployment/Proxy
 import {IDAO} from "@aragon/osx/core/dao/DAO.sol";
 
 import {HarmonyDelegationVotingPlugin} from "../harmony/HarmonyDelegationVotingPlugin.sol";
+import {IHarmonyValidatorOptInRegistry, IHIPPluginAllowlist} from "../harmony/IHarmonyInterfaces.sol";
 
 contract HarmonyDelegationVotingSetup is PluginSetup {
     address public immutable ORACLE;
+    IHarmonyValidatorOptInRegistry public immutable OPT_IN_REGISTRY;
+    IHIPPluginAllowlist public immutable HIP_ALLOWLIST;
 
-    constructor(address _oracle) PluginSetup(address(new HarmonyDelegationVotingPlugin())) {
+    constructor(
+        address _oracle,
+        IHarmonyValidatorOptInRegistry _optInRegistry,
+        IHIPPluginAllowlist _hipAllowlist
+    ) PluginSetup(address(new HarmonyDelegationVotingPlugin())) {
         require(_oracle != address(0), "INVALID_ORACLE");
         ORACLE = _oracle;
+        OPT_IN_REGISTRY = _optInRegistry;
+        HIP_ALLOWLIST = _hipAllowlist;
     }
 
     function prepareInstallation(
@@ -26,7 +35,10 @@ contract HarmonyDelegationVotingSetup is PluginSetup {
 
         plugin = ProxyLib.deployUUPSProxy(
             implementation(),
-            abi.encodeCall(HarmonyDelegationVotingPlugin.initialize, (IDAO(_dao), validatorAddress, processKey))
+            abi.encodeCall(
+                HarmonyDelegationVotingPlugin.initialize,
+                (IDAO(_dao), OPT_IN_REGISTRY, HIP_ALLOWLIST, validatorAddress, processKey)
+            )
         );
 
         PermissionLib.MultiTargetPermission[] memory permissions = new PermissionLib.MultiTargetPermission[](3);
