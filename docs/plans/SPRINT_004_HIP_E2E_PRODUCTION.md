@@ -21,14 +21,14 @@ This sprint delivers **end-to-end production readiness** for the HIP Voting Plug
 
 ### Design Decisions
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| Alias resolution | Plugin reads from OptInRegistry at `castVote` time | Single source of truth; no duplication of alias state |
-| Auto opt-out trigger | Checked at proposal creation time (lazy evaluation) | Gas-efficient; avoids needing a keeper/cron |
-| Allowlist runtime check | Modifier on `createProposal` and `castVote` | Enables effective license revocation without uninstall |
-| Validator enumeration | `EnumerableSet.AddressSet` in OptInRegistry | Oracle needs full list to build Merkle tree |
-| Missed vote tracking | Per-validator counter reset on vote; incremented at proposal close | Accurate tracking without oracle dependency |
-| Proposer gate | OptInRegistry check replaces balance gate | Only validators participate; removes wallet-as-spam vector |
+| Decision                | Choice                                                             | Rationale                                                  |
+| ----------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
+| Alias resolution        | Plugin reads from OptInRegistry at `castVote` time                 | Single source of truth; no duplication of alias state      |
+| Auto opt-out trigger    | Checked at proposal creation time (lazy evaluation)                | Gas-efficient; avoids needing a keeper/cron                |
+| Allowlist runtime check | Modifier on `createProposal` and `castVote`                        | Enables effective license revocation without uninstall     |
+| Validator enumeration   | `EnumerableSet.AddressSet` in OptInRegistry                        | Oracle needs full list to build Merkle tree                |
+| Missed vote tracking    | Per-validator counter reset on vote; incremented at proposal close | Accurate tracking without oracle dependency                |
+| Proposer gate           | OptInRegistry check replaces balance gate                          | Only validators participate; removes wallet-as-spam vector |
 
 ---
 
@@ -124,6 +124,7 @@ After (this sprint):
 **Scope:** Modify `HarmonyVotingBase` to accept an `IHarmonyValidatorOptInRegistry` reference and resolve alias wallets in `castVote()`.
 
 **Changes:**
+
 - Add `IHarmonyValidatorOptInRegistry public optInRegistry` storage slot to `HarmonyVotingBase`
 - Add `_setOptInRegistry(address)` internal setter (called during init)
 - Modify `castVote()`: resolve `msg.sender` → check if it's a direct operator or an alias via `operatorByAlias(msg.sender)`. Record the vote under the **operator** address (not the alias).
@@ -131,6 +132,7 @@ After (this sprint):
 - Requires: TASK-002 (reverse-alias lookup in registry)
 
 **Acceptance Criteria:**
+
 - [x] Validator can vote directly from operator wallet
 - [x] Validator's registered alias can vote on behalf of operator
 - [x] Vote is recorded under operator address (for power submission consistency)
@@ -142,6 +144,7 @@ After (this sprint):
 **Scope:** Track per-validator participation and auto-opt-out validators who miss 2 consecutive proposals.
 
 **Design:**
+
 - Add `mapping(address => uint256) public consecutiveMissedVotes` to `OptInRegistry`
 - At `_closeProposal()`, the plugin iterates opted-in validators and:
   - For each validator that voted: reset `consecutiveMissedVotes[operator] = 0`
@@ -154,6 +157,7 @@ After (this sprint):
 **Gas consideration:** Iterating all validators at close time is O(n). For Harmony's validator set (~100 validators), this is acceptable. If the set grows > 500, consider off-chain tracking with Merkle proof.
 
 **Acceptance Criteria:**
+
 - [x] Validator missing 1 proposal: counter = 1, still opted in
 - [x] Validator missing 2 consecutive proposals: auto opt-out triggered
 - [x] Voting in any proposal resets the counter to 0
@@ -165,12 +169,14 @@ After (this sprint):
 **Scope:** Add allowlist check on `createProposal()` and `castVote()` so that revoking a DAO from the allowlist effectively pauses the plugin.
 
 **Changes:**
+
 - Add `IHIPPluginAllowlist public hipAllowlist` storage slot to `HarmonyVotingBase`
 - Add modifier `onlyIfDAOAllowed()` that checks `hipAllowlist.isDAOAllowed(address(dao()))`
 - Apply modifier to `createProposal()` and `castVote()`
 - `submitVotingPower()` and `closeProposal()` do NOT require the check (allow finalization of in-flight proposals)
 
 **Acceptance Criteria:**
+
 - [x] If DAO is removed from allowlist, new proposals cannot be created
 - [x] If DAO is removed from allowlist, new votes cannot be cast
 - [x] In-flight proposals (already created) can still be finalized and closed
@@ -181,11 +187,13 @@ After (this sprint):
 **Scope:** Replace the `msg.sender.balance >= 1 ether` gate with an OptInRegistry check.
 
 **Changes:**
+
 - In `createProposal()`: replace balance check with `_resolveVoter(msg.sender)` — reverts if caller is not an opted-in validator or alias
 - Remove or deprecate `PROPOSER_PERMISSION_ID` constant (or keep for future use)
 - Consider keeping a minimum balance gate as an anti-spam measure (e.g., 100 ONE) alongside the validator check
 
 **Acceptance Criteria:**
+
 - [x] Only opted-in validators or their aliases can create proposals
 - [x] Non-validator addresses are rejected even if funded
 - [x] A formerly opted-in validator who was auto-opted-out cannot create proposals
@@ -195,6 +203,7 @@ After (this sprint):
 **Scope:** Upgrade `HarmonyValidatorOptInRegistry` to support enumeration and reverse lookups.
 
 **Changes:**
+
 - Import `EnumerableSet` from OpenZeppelin
 - Add `EnumerableSet.AddressSet private _operators` — all opted-in operator addresses
 - Add `mapping(address => address) private _operatorByAlias` — alias → operator reverse lookup
@@ -209,6 +218,7 @@ After (this sprint):
 - Handle alias re-registration: if operator changes alias, delete old reverse mapping
 
 **Acceptance Criteria:**
+
 - [ ] `getOperators()` returns all currently opted-in validators
 - [ ] `operatorByAlias(alias)` correctly resolves alias → operator
 - [ ] Old alias is invalidated when operator re-opts-in with a new alias
@@ -219,12 +229,14 @@ After (this sprint):
 **Scope:** Pass OptInRegistry and HIPAllowlist addresses to the plugin during installation.
 
 **Changes:**
+
 - Modify `HarmonyHIPVotingSetup` constructor to also accept `HarmonyValidatorOptInRegistry` address
 - Update `prepareInstallation()` to pass registry and allowlist references to plugin `initialize()`
 - Update `HarmonyHIPVotingPlugin.initialize()` to accept and store both references
 - Grant `AUTO_OPT_OUT_PERMISSION_ID` from OptInRegistry to the plugin
 
 **Acceptance Criteria:**
+
 - [ ] Plugin is initialized with valid OptInRegistry and HIPAllowlist references
 - [ ] Plugin has permission to call `autoOptOut()` on the registry
 - [ ] Setup still validates allowlist status before installation
@@ -234,6 +246,7 @@ After (this sprint):
 **Scope:** Full test coverage for the allowlist contract.
 
 **Test cases:**
+
 - `allowDAO` / `disallowDAO` — happy paths
 - `isDAOAllowed` — true/false cases
 - Batch operations — `allowDAOsBatch`, `disallowDAOsBatch`
@@ -246,6 +259,7 @@ After (this sprint):
 **Scope:** Full test coverage for the upgraded registry.
 
 **Test cases:**
+
 - `optIn` with alias — happy path, event emission
 - `optOut` — cleanup of set + reverse mapping
 - Enumeration — `getOperators()`, `operatorCount()`, `operatorAt()`
@@ -259,6 +273,7 @@ After (this sprint):
 **Scope:** Full lifecycle test combining all contracts.
 
 **Scenarios:**
+
 1. **Happy path:** Validator opts in with alias → DAO allowed → alias creates proposal → alias votes → oracle sets root → power submitted → proposal closed → vote counts correct
 2. **Auto opt-out path:** Validator opts in → 2 proposals created → validator doesn't vote either → auto-opted-out on second close → cannot create proposal 3
 3. **Allowlist revocation:** DAO allowed → plugin installed → proposal created → DAO disallowed → new proposal reverts → in-flight proposal can still close
@@ -270,6 +285,7 @@ After (this sprint):
 **Scope:** Verify UUPS upgrade safety for modified contracts.
 
 **Tasks:**
+
 - Run `forge inspect HarmonyVotingBase storage-layout` before and after changes
 - Verify new storage slots are appended (not inserted between existing slots)
 - Ensure `__gap` is decremented correctly for each new slot
@@ -285,6 +301,7 @@ After (this sprint):
    - Review `foundry.toml` for remappings
 
 2. **Implementation Order (dependency chain):**
+
    ```
    TASK-002 (Registry v2: enumeration + reverse lookup)
      → FEATURE-001 (Alias integration in VotingBase)
@@ -321,33 +338,33 @@ After (this sprint):
 
 ## Milestones
 
-| Milestone | Description | Target | Status |
-|-----------|-------------|--------|--------|
-| M1 | Core contract changes compiled (FEATURE-001..003, TASK-001..002) | 2026-02-17 | TODO |
-| M2 | Setup wiring + unit tests passing (TASK-003..005) | 2026-02-21 | TODO |
-| M3 | E2E integration tests + storage validation (TASK-006..007) | 2026-02-24 | TODO |
+| Milestone | Description                                                      | Target     | Status |
+| --------- | ---------------------------------------------------------------- | ---------- | ------ |
+| M1        | Core contract changes compiled (FEATURE-001..003, TASK-001..002) | 2026-02-17 | TODO   |
+| M2        | Setup wiring + unit tests passing (TASK-003..005)                | 2026-02-21 | TODO   |
+| M3        | E2E integration tests + storage validation (TASK-006..007)       | 2026-02-24 | TODO   |
 
 ---
 
 ## Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Gas cost of iterating validators at close | High gas if >500 validators | Harmony has ~100 active validators; add circuit breaker at 500 |
-| UUPS storage collision on VotingBase upgrade | Bricked proxies | TASK-007 validates layout; new slots appended to `__gap` |
-| OptInRegistry is standalone (not UUPS) | Cannot upgrade in-place | Current deployment has no proxied state; redeploy + migrate |
-| Alias change during active proposal | Inconsistent vote attribution | Vote recorded under operator; alias change doesn't affect in-flight votes |
-| Allowlist revocation mid-proposal | Finalization blocked | `submitVotingPower` and `closeProposal` exempt from allowlist check |
+| Risk                                         | Impact                        | Mitigation                                                                |
+| -------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------- |
+| Gas cost of iterating validators at close    | High gas if >500 validators   | Harmony has ~100 active validators; add circuit breaker at 500            |
+| UUPS storage collision on VotingBase upgrade | Bricked proxies               | TASK-007 validates layout; new slots appended to `__gap`                  |
+| OptInRegistry is standalone (not UUPS)       | Cannot upgrade in-place       | Current deployment has no proxied state; redeploy + migrate               |
+| Alias change during active proposal          | Inconsistent vote attribution | Vote recorded under operator; alias change doesn't affect in-flight votes |
+| Allowlist revocation mid-proposal            | Finalization blocked          | `submitVotingPower` and `closeProposal` exempt from allowlist check       |
 
 ---
 
 ## Cross-Repo Impact
 
-| Repository | Impact | When |
-|------------|--------|------|
+| Repository             | Impact                                                                                                                  | When     |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------- |
 | **Aragon-app-backend** | Oracle must read OptInRegistry `getOperators()` to build Merkle tree; API must expose validator list with opt-in status | After M1 |
-| **aragon-app** | Frontend must display opt-in status, alias wallet, missed votes counter; proposal creation restricted to validators | After M2 |
-| **AragonOSX** | Subgraph needs new events: `AutoOptedOut`, updated `OptedIn`/`OptedOut` with enumeration data | After M1 |
+| **aragon-app**         | Frontend must display opt-in status, alias wallet, missed votes counter; proposal creation restricted to validators     | After M2 |
+| **AragonOSX**          | Subgraph needs new events: `AutoOptedOut`, updated `OptedIn`/`OptedOut` with enumeration data                           | After M1 |
 
 ---
 

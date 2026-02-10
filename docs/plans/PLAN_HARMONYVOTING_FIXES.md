@@ -15,14 +15,14 @@ This **master plan** coordinates fixes across **4 repositories** for the Harmony
 
 ### Problem Summary
 
-| Plugin            | Issue                                                             | Severity |
-| ----------------- | ----------------------------------------------------------------- | -------- |
-| NativeTokenVoting | Installs but displays as `UNKNOWN` name                           | High     |
-| DelegationVoting  | `processKey` from form ignored; uses hardcoded key                | High     |
-| DelegationVoting  | Validator address not displayed after install                     | High     |
-| DelegationVoting  | Delegators and token counts not shown                             | High     |
-| DelegationVoting  | Proposals created successfully but not listed in UI               | Critical |
-| HIPVoting         | HIP Voting E2E Production Readiness (Completed 2026-02-10)         | Low      |
+| Plugin            | Issue                                                      | Severity |
+| ----------------- | ---------------------------------------------------------- | -------- |
+| NativeTokenVoting | Installs but displays as `UNKNOWN` name                    | High     |
+| DelegationVoting  | `processKey` from form ignored; uses hardcoded key         | High     |
+| DelegationVoting  | Validator address not displayed after install              | High     |
+| DelegationVoting  | Delegators and token counts not shown                      | High     |
+| DelegationVoting  | Proposals created successfully but not listed in UI        | Critical |
+| HIPVoting         | HIP Voting E2E Production Readiness (Completed 2026-02-10) | Low      |
 
 ---
 
